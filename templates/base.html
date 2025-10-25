@@ -1,0 +1,96 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciador de Tarefas</title>
+    <!-- CDN do Tailwind Play -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  </head>
+  <body class="bg-slate-800 text-slate-100">
+    <!-- torna a nav fixa para que permaneça visível ao rolar -->
+    <nav class="fixed top-0 left-0 right-0 bg-slate-900 shadow-sm z-30">
+      <div class="max-w-5xl mx-auto px-4">
+        <div class="flex items-center justify-between h-14">
+          <a class="font-bold text-lg text-white" href="{% url 'task_list:home' %}">Gerenciador de Tarefas</a>
+          <div class="flex items-center gap-3">
+            {% if user.is_authenticated %}
+              <div class="text-right">
+                <div class="text-xs text-slate-400">Bem-vindo,</div>
+                <div class="font-semibold text-slate-100">{{ user.username }}</div>
+              </div>
+              <form method="post" action="{% url 'task_list:logout' %}" class="inline-block ml-2">
+                {% csrf_token %}
+                <button type="submit" class="text-sm px-3 py-1 border rounded text-slate-100 border-slate-700 hover:bg-slate-700">Sair</button>
+              </form>
+            {% else %}
+              <a class="text-sm px-3 py-1 border rounded text-blue-300 border-slate-700 hover:bg-slate-700" href="{% url 'task_list:login' %}">Entrar</a>
+              <a class="text-sm px-3 py-1 bg-blue-600 text-white rounded" href="{% url 'task_list:register' %}">Registrar</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- main: adiciona padding superior/inferior para que header/footer não cubram o conteúdo, e centraliza com max-w -->
+    <main class="max-w-5xl mx-auto px-4 pt-20 pb-20">
+      {# Renderização server-side das mensagens do django usando estilos do tailwind #}
+      {% if messages %}
+        <div class="mb-3">
+          {% for message in messages %}
+            <div class="flex items-start justify-between p-3 rounded mb-2 text-sm
+                        {% if 'error' in message.tags %}bg-red-700 text-red-100{% elif 'warning' in message.tags %}bg-yellow-700 text-yellow-100{% else %}bg-slate-700 text-slate-100{% endif %}">
+              <div>{{ message }}</div>
+              <button type="button" class="ml-4 text-slate-300 close-alert">✕</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- torna o footer fixo para permanecer visível e mantém a largura interna centralizada -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-slate-900 text-slate-100 py-2 z-30">
+      <div class="max-w-5xl mx-auto text-center px-4">
+        <small class="text-slate-300">Gerenciador de Tarefas © {% now "Y" %}</small>
+      </div>
+    </footer>
+
+    <!-- Helpers para fechar alertas, confirmar exclusão e alternar modais -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        // botões de fechamento de alertas
+        document.querySelectorAll('.close-alert').forEach(function(btn){
+          btn.addEventListener('click', function(){ btn.parentElement.remove(); });
+        });
+
+        // formulários de confirmação de exclusão
+        document.querySelectorAll('form.confirm-delete').forEach(function(f){
+          f.addEventListener('submit', function(e){
+            if (!confirm('Tem certeza que deseja excluir esta tarefa?')){
+              e.preventDefault();
+            }
+          });
+        });
+
+        // alternadores de modal: elementos com data-tw-modal-target e data-tw-modal-hide
+        document.querySelectorAll('[data-tw-modal-target]').forEach(function(btn){
+          var target = btn.getAttribute('data-tw-modal-target');
+          var modal = document.querySelector(target);
+          if (!modal) return;
+          btn.addEventListener('click', function(){ modal.classList.remove('hidden'); document.body.classList.add('overflow-y-hidden'); });
+        });
+        document.querySelectorAll('[data-tw-modal-hide]').forEach(function(btn){
+          var target = btn.getAttribute('data-tw-modal-hide');
+          var modal = document.querySelector(target);
+          if (!modal) return;
+          btn.addEventListener('click', function(){ modal.classList.add('hidden'); document.body.classList.remove('overflow-y-hidden'); });
+        });
+      });
+    </script>
+   </body>
+ </html>

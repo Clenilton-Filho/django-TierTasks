@@ -1,0 +1,58 @@
+/* CSS simplificado: mantenha apenas helpers mínimos que não são facilmente substituíveis pelas utilitárias do Tailwind CDN.
+   A maioria das regras visuais (espaçamento, hover, transições, layout responsivo) foi movida
+   para classes utilitárias do Tailwind nos templates para que iniciantes vejam tudo no HTML.
+*/
+
+/* Mantenha uma base mínima para inputs/tema de forma que os widgets de formulário renderizados pelo Django
+   fiquem consistentes quando o template não injetar classes do Tailwind. Iniciantes podem remover isso
+   mais tarde, quando adicionarem classes a todos os widgets de formulário. */
+input, textarea, select {
+  background: #0f1724; /* slate-800-ish */
+  color: #e6eef8; /* light text */
+  border: 1px solid #334155; /* slate-700-ish */
+  border-radius: 6px;
+}
+input::placeholder, textarea::placeholder {
+  color: #94a3b8; /* slate-400 */
+}
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.12); /* subtle blue ring */
+  border-color: #60a5fa; /* blue-400-ish */
+}
+
+/* Garanta que campos de formulário renderizados pelo Django dentro de .form-fields sejam empilhados e largura cheia
+   para que labels e inputs não apareçam inline por padrão. Este é um pequeno helper amigável para iniciantes enquanto
+   os templates são migrados para utilitárias do Tailwind. */
+.form-fields label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #e6eef8;
+}
+.form-fields input,
+.form-fields textarea,
+.form-fields select {
+  width: 100%;
+  display: block;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  background: #0f1724;
+  color: #e6eef8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+}
+
+/* Pequena animação de fade-in (mantida como um tiny helper) */
+.card { animation: fadeIn 0.18s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Helpers mínimos que ainda podem ser referenciados por marcação mais antiga */
+.task-completed { opacity: 0.55; }
+
+/* Mantenha links do footer herdando cor (baixo risco manter) */
+footer a { color: inherit; }
