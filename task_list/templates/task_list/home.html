@@ -1,500 +1,270 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="flex justify-center">
-  <div class="w-full max-w-3xl px-4">
-    <div class="text-center mb-3 mt-3">
-      <h4 class="text-lg font-semibold text-slate-100">Adicione uma tarefa</h4>
-    </div>
-    <!-- Formulário simples para criar uma nova tarefa com campo opcional de prazo e prioridade. -->
-    <form method="post" class="mb-4">
-      {% csrf_token %}
-      <div class="mb-2">
-        <label for="newTaskTitle" class="sr-only">Título da nova tarefa</label>
-        <input id="newTaskTitle" name="title" class="w-full border rounded-lg px-3 py-2 text-lg bg-slate-700 text-slate-100 border-slate-600" placeholder="Nova tarefa...">
-      </div>
-      <!-- Linha: esquerda = data + prioridade, direita = botão de adicionar alinhado ao canto inferior-direito -->
-      <div class="mb-2 flex flex-wrap items-end justify-between gap-2">
-        <div class="flex flex-wrap items-center gap-2">
-          <label for="newTaskDue" class="sr-only">Prazo (opcional)</label>
-          <label for="newTaskDueDisplay" class="sr-only">Prazo (opcional)</label>
-          <!-- Use o seletor de data nativo; mantenha o atributo name para que o backend receba ISO (AAAA-MM-DD). -->
-          <input id="newTaskDue" name="due" type="date" class="js-native-date border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" style="max-width:220px;">
-          <!-- Assistente visual mostrando a data formatada como dd/mm/aaaa para consistência -->
-          <span id="newTaskDueDisplay" class="ml-2 text-slate-300 text-sm"></span>
-          <label for="newTaskPriority" class="sr-only">Prioridade</label>
-          <select id="newTaskPriority" name="priority" class="border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" style="max-width:200px;">
-            <option value="">Sem prioridade (padrão)</option>
-            <option value="low">Baixa</option>
-            <option value="medium">Média</option>
-            <option value="high">Alta</option>
-          </select>
-        </div>
-        <div class="flex-shrink-0">
-          <button class="bg-green-600 text-white px-4 py-2 rounded self-end" type="submit">Adicionar</button>
-        </div>
-      </div>
-    </form>
 
-    <!-- Controles: ordenação e filtro -->
-    <!-- adicionado mt-6 para aumentar o espaçamento em relação ao formulário de adicionar tarefa -->
-    <div class="flex mb-3 gap-4 items-center mt-6">
-      <!-- Substituir dropdowns por selects simples dentro de formulários GET (mais fácil para iniciantes) -->
-      <form method="get" class="flex items-center gap-3">
-        <label for="sortSelect" class="sr-only">Ordenar</label>
-        <span class="text-sm text-slate-300">Ordenar</span>
-        <select id="sortSelect" name="sort" class="border rounded px-2 py-1 text-sm bg-slate-700 text-slate-100 border-slate-600">
-          <option value="">Padrão</option>
-          <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Data (mais novas)</option>
-          <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Data (mais antigas)</option>
-          <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Título (A-Z)</option>
-          <option value="title_desc" {% if sort == 'title_desc' %}selected{% endif %}>Título (Z-A)</option>
-          <option value="due_asc" {% if sort == 'due_asc' %}selected{% endif %}>Prazo (mais próximos)</option>
-          <option value="due_desc" {% if sort == 'due_desc' %}selected{% endif %}>Prazo (mais distantes)</option>
-          <option value="priority" {% if sort == 'priority' %}selected{% endif %}>Prioridade primeiro</option>
-        </select>
-      </form>
-
-      <form id="filterForm" method="get" class="flex items-center gap-3">
-        <label for="filterSelect" class="sr-only">Filtrar</label>
-        <span class="text-sm text-slate-300">Filtrar</span>
-        <select id="filterSelect" name="filter" class="border rounded px-2 py-1 text-sm bg-slate-700 text-slate-100 border-slate-600">
-          <option value="all" {% if filter == 'all' %}selected{% endif %}>Todas</option>
-          <option value="completed" {% if filter == 'completed' %}selected{% endif %}>Concluídas</option>
-          <option value="incomplete" {% if filter == 'incomplete' %}selected{% endif %}>Não concluídas</option>
-        </select>
-        <!-- Preserva a busca e ordenação atuais ao mudar o filtro. O script abaixo
-             limpa `q` quando o usuário seleciona 'Todas' para reverter os filtros. -->
-        <input type="hidden" name="q" id="filterFormQ" value="{{ q }}">
-        <input type="hidden" name="sort" value="{{ sort }}">
-        <!-- indica que este envio vem do controle de filtro -->
-        <input type="hidden" name="filter_action" value="1">
-        <!-- botão pequeno de envio como fallback sem JS -->
-        <button type="submit" class="text-sm px-2 py-1 rounded bg-slate-600 text-slate-100 border border-slate-500">Aplicar</button>
-      </form>
-
-      <script>
-        // Amigável para iniciantes: quando o select de filtro muda, se o usuário escolheu 'Todas'
-        // limpamos o input oculto `q` para que o servidor mostre a visualização padrão.
-        (function(){
-          var sel = document.getElementById('filterSelect');
-          var qInput = document.getElementById('filterFormQ');
-          var form = document.getElementById('filterForm');
-          if (!sel || !qInput || !form) return;
-          sel.addEventListener('change', function(){
-            if (sel.value === 'all') {
-              qInput.value = '';
-            }
-            // envia o formulário para que o filtro seja aplicado imediatamente
-            form.submit();
-          });
-        })();
-      </script>
-
-      <div class="ml-auto">
-        <!-- Pesquisa de texto simples mantém os valores atuais de ordenação/filtro -->
-        <form method="get" class="flex items-center gap-3">
-          <input type="hidden" name="sort" value="{{ sort }}">
-          <input type="hidden" name="filter" value="{{ filter }}">
-          <label for="qSearch" class="sr-only">Pesquisar título</label>
-          <input id="qSearch" name="q" value="{{ q }}" class="border rounded px-2 py-1 text-sm bg-slate-700 text-slate-100 border-slate-600" placeholder="Pesquisar título..." style="max-width:180px;">
-          <button class="bg-slate-300 text-sm px-2 py-1 rounded text-slate-900" type="submit" aria-label="Buscar" title="Buscar">⏎</button>
-        </form>
-      </div>
-    </div>
-
-    <div>
-      <!-- Seções de tarefas por nível de prioridade -->
-      {% if high_tasks %}
-        <h5 class="mt-4 mb-3 text-slate-100">Prioridade Alta</h5>
-        {% for task in high_tasks %}
-          <div class="bg-slate-700 shadow rounded p-3 mb-2 transition-transform duration-150 ease-in-out hover:-translate-y-0.5 hover:shadow-xl {% if task.completed %}opacity-60{% endif %} {% if task.priority_level == 'high' %}ring-2 ring-red-500{% endif %}"
-               role="button"
-               data-task-id="{{ task.id }}"
-               data-task-title="{{ task.title|escapejs }}"
-               data-task-description="{{ task.description|default:''|escapejs }}"
-               data-task-due="{{ task.due_date|date:'Y-m-d' }}"
-               data-task-created="{{ task.created_at|date:'c' }}"
-               data-task-priority="{{ task.priority_level }}">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-3">
-                <div>
-                  <!-- Badge indica prioridade -->
-                  <span class="inline-block bg-red-600 text-white px-2 py-0.5 rounded text-xs">Alta</span>
-                </div>
-                <div>
-                  <strong class="mr-2 text-slate-100">{{ task.title }}</strong>
-                  <div>
-                    {% if task.due_date %}
-                      <small class="text-slate-300 text-sm">Prazo: {{ task.due_date|date:"d/m/Y" }}</small>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <form method="post" action="{% url 'task_list:toggle_complete' task.id %}" class="m-0 inline">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600">{% if task.completed %}Não concluída{% else %}Concluída{% endif %}</button>
-                </form>
-                <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 inline confirm-delete">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-red-400 border-slate-600">Excluir</button>
-                </form>
-                <!-- Botão Editar abre um modal (usa o JS de base.html) -->
-                <button type="button" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600" data-tw-modal-target="#taskModal-{{ task.id }}">Editar</button>
-              </div>
-            </div>
-          </div>
-           <!-- Modal por tarefa (formulário de edição sem-JS) -->
-          <div id="taskModal-{{ task.id }}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-40" tabindex="-1" aria-hidden="true">
-            <div class="bg-slate-800 rounded shadow-lg w-full max-w-lg mx-4">
-              <div class="flex items-center justify-between p-4 border-b border-slate-700">
-                <div class="flex items-center gap-3">
-                  <h5 class="font-semibold text-slate-100">Editar Tarefa #{{ task.display_index }}</h5>
-                  <small class="text-sm text-slate-300">{{ task.created_at|date:"d/m/Y H:i" }}</small>
-                </div>
-                <button type="button" class="text-slate-300" data-tw-modal-hide="#taskModal-{{ task.id }}" aria-label="Fechar">✕</button>
-              </div>
-              <form method="post" action="{% url 'task_list:update_task' task.id %}">
-                {% csrf_token %}
-                <div class="p-4">
-                  <div class="mb-3">
-                    <label for="title-{{ task.id }}" class="block text-sm font-medium text-slate-100">Título</label>
-                    <input id="title-{{ task.id }}" name="title" type="text" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{{ task.title }}" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="description-{{ task.id }}" class="block text-sm font-medium text-slate-100">Descrição</label>
-                    <textarea id="description-{{ task.id }}" name="description" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" rows="4">{{ task.description }}</textarea>
-                  </div>
-                  <div class="grid grid-cols-2 gap-2">
-                    <div>
-                      <label for="due-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prazo (opcional)</label>
-                      <!-- Entrada de data nativa (o backend recebe AAAA-MM-DD). O auxílio de exibição ao lado mostra dd/mm/aaaa. -->
-                      <div class="flex items-center gap-2">
-                        <input id="due-{{ task.id }}" name="due" type="date" class="js-native-date w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{% if task.due_date %}{{ task.due_date|date:'Y-m-d' }}{% endif %}">
-                        <span id="dueDisplay-{{ task.id }}" class="text-slate-300 text-sm">{% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% endif %}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label for="priority-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prioridade</label>
-                      <select id="priority-{{ task.id }}" name="priority" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600">
-                        <option value="" {% if not task.priority_level %}selected{% endif %}>Sem prioridade</option>
-                        <option value="low" {% if task.priority_level == 'low' %}selected{% endif %}>Baixa</option>
-                        <option value="medium" {% if task.priority_level == 'medium' %}selected{% endif %}>Média</option>
-                        <option value="high" {% if task.priority_level == 'high' %}selected{% endif %}>Alta</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex justify-end gap-2 p-4 border-t border-slate-700">
-                  <button type="button" class="px-3 py-1 border rounded text-slate-300 border-slate-600" data-tw-modal-hide="#taskModal-{{ task.id }}">Fechar</button>
-                  <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Salvar</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      {% if medium_tasks %}
-        <h5 class="mt-4 mb-3 text-slate-100">Prioridade Média</h5>
-        {% for task in medium_tasks %}
-          <div class="bg-slate-700 shadow rounded p-3 mb-2 transition-transform duration-150 ease-in-out hover:-translate-y-0.5 hover:shadow-xl {% if task.completed %}opacity-60{% endif %} {% if task.priority_level == 'medium' %}ring-2 ring-yellow-500{% endif %}"
-               role="button"
-               data-task-id="{{ task.id }}"
-               data-task-title="{{ task.title|escapejs }}"
-               data-task-description="{{ task.description|default:''|escapejs }}"
-               data-task-due="{{ task.due_date|date:'Y-m-d' }}"
-               data-task-created="{{ task.created_at|date:'c' }}"
-               data-task-priority="{{ task.priority_level }}">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-3">
-                <div>
-                  <span class="inline-block bg-yellow-500 text-white px-2 py-0.5 rounded text-xs">Média</span>
-                </div>
-                <div>
-                  <strong class="mr-2 text-slate-100">{{ task.title }}</strong>
-                  <div>
-                    {% if task.due_date %}
-                      <small class="text-slate-300 text-sm">Prazo: {{ task.due_date|date:"d/m/Y" }}</small>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <form method="post" action="{% url 'task_list:toggle_complete' task.id %}" class="m-0 inline">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600">{% if task.completed %}Não concluída{% else %}Concluída{% endif %}</button>
-                </form>
-                <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 inline confirm-delete">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-red-400 border-slate-600">Excluir</button>
-                </form>
-                <button type="button" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600" data-tw-modal-target="#taskModal-{{ task.id }}">Editar</button>
-              </div>
-            </div>
-          </div>
-           <!-- Modal por tarefa (formulário de edição sem-JS) -->
-          <div id="taskModal-{{ task.id }}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-40" tabindex="-1" aria-hidden="true">
-            <div class="bg-slate-800 rounded shadow-lg w-full max-w-lg mx-4">
-              <div class="flex items-center justify-between p-4 border-b border-slate-700">
-                <div class="flex items-center gap-3">
-                  <h5 class="font-semibold text-slate-100">Editar Tarefa #{{ task.display_index }}</h5>
-                  <small class="text-sm text-slate-300">{{ task.created_at|date:"d/m/Y H:i" }}</small>
-                </div>
-                <button type="button" class="text-slate-300" data-tw-modal-hide="#taskModal-{{ task.id }}" aria-label="Fechar">✕</button>
-              </div>
-              <form method="post" action="{% url 'task_list:update_task' task.id %}">
-                {% csrf_token %}
-                <div class="p-4">
-                  <div class="mb-3">
-                    <label for="title-{{ task.id }}" class="block text-sm font-medium text-slate-100">Título</label>
-                    <input id="title-{{ task.id }}" name="title" type="text" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{{ task.title }}" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="description-{{ task.id }}" class="block text-sm font-medium text-slate-100">Descrição</label>
-                    <textarea id="description-{{ task.id }}" name="description" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" rows="4">{{ task.description }}</textarea>
-                  </div>
-                  <div class="grid grid-cols-2 gap-2">
-                    <div>
-                      <label for="due-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prazo (opcional)</label>
-                      <!-- Entrada de data nativa (o backend recebe AAAA-MM-DD). O auxílio de exibição ao lado mostra dd/mm/aaaa. -->
-                      <div class="flex items-center gap-2">
-                        <input id="due-{{ task.id }}" name="due" type="date" class="js-native-date w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{% if task.due_date %}{{ task.due_date|date:'Y-m-d' }}{% endif %}">
-                        <span id="dueDisplay-{{ task.id }}" class="text-slate-300 text-sm">{% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% endif %}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label for="priority-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prioridade</label>
-                      <select id="priority-{{ task.id }}" name="priority" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600">
-                        <option value="" {% if not task.priority_level %}selected{% endif %}>Sem prioridade</option>
-                        <option value="low" {% if task.priority_level == 'low' %}selected{% endif %}>Baixa</option>
-                        <option value="medium" {% if task.priority_level == 'medium' %}selected{% endif %}>Média</option>
-                        <option value="high" {% if task.priority_level == 'high' %}selected{% endif %}>Alta</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex justify-end gap-2 p-4 border-t border-slate-700">
-                  <button type="button" class="px-3 py-1 border rounded text-slate-300 border-slate-600" data-tw-modal-hide="#taskModal-{{ task.id }}">Fechar</button>
-                  <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Salvar</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      {% if low_tasks %}
-        <h5 class="mt-4 mb-3 text-slate-100">Prioridade Baixa</h5>
-        {% for task in low_tasks %}
-          <div class="bg-slate-700 shadow rounded p-3 mb-2 transition-transform duration-150 ease-in-out hover:-translate-y-0.5 hover:shadow-xl {% if task.completed %}opacity-60{% endif %} {% if task.priority_level == 'low' %}ring-2 ring-green-500{% endif %}"
-               role="button"
-               data-task-id="{{ task.id }}"
-               data-task-title="{{ task.title|escapejs }}"
-               data-task-description="{{ task.description|default:''|escapejs }}"
-               data-task-due="{{ task.due_date|date:'Y-m-d' }}"
-               data-task-created="{{ task.created_at|date:'c' }}"
-               data-task-priority="{{ task.priority_level }}">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-3">
-                <div>
-                  <span class="inline-block bg-green-600 text-white px-2 py-0.5 rounded text-xs">Baixa</span>
-                </div>
-                <div>
-                  <strong class="mr-2 text-slate-100">{{ task.title }}</strong>
-                  <div>
-                    {% if task.due_date %}
-                      <small class="text-slate-300 text-sm">Prazo: {{ task.due_date|date:"d/m/Y" }}</small>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <form method="post" action="{% url 'task_list:toggle_complete' task.id %}" class="m-0 inline">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600">{% if task.completed %}Não concluída{% else %}Concluída{% endif %}</button>
-                </form>
-                <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 inline confirm-delete">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-red-400 border-slate-600">Excluir</button>
-                </form>
-                <button type="button" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600" data-tw-modal-target="#taskModal-{{ task.id }}">Editar</button>
-              </div>
-            </div>
-          </div>
-           <!-- Modal por tarefa (formulário de edição sem-JS) -->
-          <div id="taskModal-{{ task.id }}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-40" tabindex="-1" aria-hidden="true">
-            <div class="bg-slate-800 rounded shadow-lg w-full max-w-lg mx-4">
-              <div class="flex items-center justify-between p-4 border-b border-slate-700">
-                <div class="flex items-center gap-3">
-                  <h5 class="font-semibold text-slate-100">Editar Tarefa #{{ task.display_index }}</h5>
-                  <small class="text-sm text-slate-300">{{ task.created_at|date:"d/m/Y H:i" }}</small>
-                </div>
-                <button type="button" class="text-slate-300" data-tw-modal-hide="#taskModal-{{ task.id }}" aria-label="Fechar">✕</button>
-              </div>
-              <form method="post" action="{% url 'task_list:update_task' task.id %}">
-                {% csrf_token %}
-                <div class="p-4">
-                  <div class="mb-3">
-                    <label for="title-{{ task.id }}" class="block text-sm font-medium text-slate-100">Título</label>
-                    <input id="title-{{ task.id }}" name="title" type="text" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{{ task.title }}" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="description-{{ task.id }}" class="block text-sm font-medium text-slate-100">Descrição</label>
-                    <textarea id="description-{{ task.id }}" name="description" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" rows="4">{{ task.description }}</textarea>
-                  </div>
-                  <div class="grid grid-cols-2 gap-2">
-                    <div>
-                      <label for="due-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prazo (opcional)</label>
-                      <!-- Entrada de data nativa (o backend recebe AAAA-MM-DD). O auxílio de exibição ao lado mostra dd/mm/aaaa. -->
-                      <div class="flex items-center gap-2">
-                        <input id="due-{{ task.id }}" name="due" type="date" class="js-native-date w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{% if task.due_date %}{{ task.due_date|date:'Y-m-d' }}{% endif %}">
-                        <span id="dueDisplay-{{ task.id }}" class="text-slate-300 text-sm">{% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% endif %}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label for="priority-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prioridade</label>
-                      <select id="priority-{{ task.id }}" name="priority" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600">
-                        <option value="" {% if not task.priority_level %}selected{% endif %}>Sem prioridade</option>
-                        <option value="low" {% if task.priority_level == 'low' %}selected{% endif %}>Baixa</option>
-                        <option value="medium" {% if task.priority_level == 'medium' %}selected{% endif %}>Média</option>
-                        <option value="high" {% if task.priority_level == 'high' %}selected{% endif %}>Alta</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex justify-end gap-2 p-4 border-t border-slate-700">
-                  <button type="button" class="px-3 py-1 border rounded text-slate-300 border-slate-600" data-tw-modal-hide="#taskModal-{{ task.id }}">Fechar</button>
-                  <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Salvar</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      {% if none_tasks %}
-        <h5 class="mt-4 mb-3 text-slate-100">Sem prioridade</h5>
-        {% for task in none_tasks %}
-          <div class="bg-slate-700 shadow rounded p-3 mb-2 transition-transform duration-150 ease-in-out hover:-translate-y-0.5 hover:shadow-xl {% if task.completed %}opacity-60{% endif %}"
-               role="button"
-               data-task-id="{{ task.id }}"
-               data-task-title="{{ task.title|escapejs }}"
-               data-task-description="{{ task.description|default:''|escapejs }}"
-               data-task-due="{{ task.due_date|date:'Y-m-d' }}"
-               data-task-created="{{ task.created_at|date:'c' }}"
-               data-task-priority="{{ task.priority_level }}">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-3">
-                <div>
-                  <strong class="mr-2 text-slate-100">{{ task.title }}</strong>
-                  <div>
-                    {% if task.due_date %}
-                      <small class="text-slate-300 text-sm">Prazo: {{ task.due_date|date:"d/m/Y" }}</small>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <form method="post" action="{% url 'task_list:toggle_complete' task.id %}" class="m-0 inline">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600">{% if task.completed %}Não concluída{% else %}Concluída{% endif %}</button>
-                </form>
-                <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 inline confirm-delete">
-                  {% csrf_token %}
-                  <button type="submit" class="text-sm px-2 py-1 border rounded text-red-400 border-slate-600">Excluir</button>
-                </form>
-                <button type="button" class="text-sm px-2 py-1 border rounded text-slate-100 border-slate-600" data-tw-modal-target="#taskModal-{{ task.id }}">Editar</button>
-              </div>
-            </div>
-          </div>
-           <!-- Modal por tarefa (formulário de edição sem-JS) -->
-          <div id="taskModal-{{ task.id }}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-40" tabindex="-1" aria-hidden="true">
-            <div class="bg-slate-800 rounded shadow-lg w-full max-w-lg mx-4">
-              <div class="flex items-center justify-between p-4 border-b border-slate-700">
-                <div class="flex items-center gap-3">
-                  <h5 class="font-semibold text-slate-100">Editar Tarefa #{{ task.display_index }}</h5>
-                  <small class="text-sm text-slate-300">{{ task.created_at|date:"d/m/Y H:i" }}</small>
-                </div>
-                <button type="button" class="text-slate-300" data-tw-modal-hide="#taskModal-{{ task.id }}" aria-label="Fechar">✕</button>
-              </div>
-              <form method="post" action="{% url 'task_list:update_task' task.id %}">
-                {% csrf_token %}
-                <div class="p-4">
-                  <div class="mb-3">
-                    <label for="title-{{ task.id }}" class="block text-sm font-medium text-slate-100">Título</label>
-                    <input id="title-{{ task.id }}" name="title" type="text" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{{ task.title }}" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="description-{{ task.id }}" class="block text-sm font-medium text-slate-100">Descrição</label>
-                    <textarea id="description-{{ task.id }}" name="description" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" rows="4">{{ task.description }}</textarea>
-                  </div>
-                  <div class="grid grid-cols-2 gap-2">
-                    <div>
-                      <label for="due-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prazo (opcional)</label>
-                      <!-- Entrada de data nativa (o backend recebe AAAA-MM-DD). O auxílio de exibição ao lado mostra dd/mm/aaaa. -->
-                      <div class="flex items-center gap-2">
-                        <input id="due-{{ task.id }}" name="due" type="date" class="js-native-date w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600" value="{% if task.due_date %}{{ task.due_date|date:'Y-m-d' }}{% endif %}">
-                        <span id="dueDisplay-{{ task.id }}" class="text-slate-300 text-sm">{% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% endif %}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label for="priority-{{ task.id }}" class="block text-sm font-medium text-slate-100">Prioridade</label>
-                      <select id="priority-{{ task.id }}" name="priority" class="w-full border rounded px-3 py-2 bg-slate-700 text-slate-100 border-slate-600">
-                        <option value="" {% if not task.priority_level %}selected{% endif %}>Sem prioridade</option>
-                        <option value="low" {% if task.priority_level == 'low' %}selected{% endif %}>Baixa</option>
-                        <option value="medium" {% if task.priority_level == 'medium' %}selected{% endif %}>Média</option>
-                        <option value="high" {% if task.priority_level == 'high' %}selected{% endif %}>Alta</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex justify-end gap-2 p-4 border-t border-slate-700">
-                  <button type="button" class="px-3 py-1 border rounded text-slate-300 border-slate-600" data-tw-modal-hide="#taskModal-{{ task.id }}">Fechar</button>
-                  <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Salvar</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      {% if not high_tasks and not medium_tasks and not low_tasks and not none_tasks %}
-        <p class="text-slate-300">Nenhuma tarefa ainda.</p>
-      {% endif %}
-
-      </div>
+  <!-- Botões que parecem estar dentro do header, mas estão fora-->
+  <div class="fixed top-7 z-40 header-controls-left">
+    <div class="flex flex-row items-center gap-3">
+      <button id="btnOpenAdd" data-open-modal="#addTaskModal" class="p-2 rounded-md text-pink-200 hover:bg-pink-600/20 bg-transparent">➕</button>
+      <button id="btnOpenSearch" data-open-modal="#searchModal" class="p-2 rounded-md text-pink-200 hover:bg-pink-600/20 bg-transparent">🔍</button>
     </div>
   </div>
+
+  {# Conteúdo principal entre o header e o footer #}
+  <main class="w-full px-6 pb-12 pt-6 flex items-center justify-center">
+    <div class="w-full min-h-[calc(100vh-7rem)] flex items-center">
+
+     <!-- Grupos para as prioridades-->
+    <div class="w-full">
+
+    <!-- Prioridade Alta -->
+        <section class="priority-tier">
+           <!-- fundo escuro cobrindo do ícone até o botão de alternar -->
+           <div class="flex items-center bg-black/40 p-4 rounded-lg backdrop-blur-sm">
+            <!-- ícone do grupo -->
+            <div class="w-20 flex justify-center">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center" style="border:3px solid #ff5a5f;">
+                <!-- SVG estrela -->
+                <svg viewBox="0 0 24 24" class="w-6 h-6">
+                  <polygon fill="#ff5a5f" points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"></polygon>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 3 slots fixos -->
+            <div class="flex-1 overflow-hidden">
+              <div class="group-carousel relative overflow-hidden">
+                <div class="carousel-track flex transition-transform duration-300" data-visible="0" data-total="{{ high_tasks|length }}">
+                  {% for task in high_tasks %}
+                  <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+                    <div class="bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
+                      <!-- Botões no canto superior direito -->
+                      <div class="absolute top-2 right-2 flex gap-1">
+                        <form method="post" action="{% url 'task_list:toggle_complete' task.id %}">
+                          {% csrf_token %}
+                          <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" title="Marcar/Desmarcar">✓</button>
+                        </form>
+                        <button type="button" class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">i</button>
+                        <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
+                          {% csrf_token %}
+                          <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border text-red-500" title="Excluir">✕</button>
+                        </form>
+                      </div>
+                      <!-- Prazo da tarefa -->
+                      <div class="flex flex-col justify-center h-full">
+                        <div class="text-base font-semibold break-words">{{ task.title }}</div>
+                        <div class="text-sm text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                  <!-- Criando slots vazios usando a quantidade recebida da view -->
+                  {% for _ in empty_slots_high %}
+                    <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+                      <div class="bg-slate-600/40 rounded-lg h-28 flex items-center justify-center text-slate-400">vazio</div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <!-- botão alternar (direita), desativado por padrão -->
+            <div class="w-20 flex justify-center pl-3">
+              <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="high">➤</button>
+            </div>
+           </div>
+        </section>
+
+    <!-- Prioridade média -->
+    <section class="priority-tier">
+       <div class="flex items-center bg-black/40 p-4 rounded-lg backdrop-blur-sm">
+        <div class="w-20 flex justify-center">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center" style="border:3px solid #ffd166;">
+            <svg viewBox="0 0 24 24" class="w-6 h-6">
+              <polygon fill="#ffd166" points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"></polygon>
+            </svg>
+          </div>
+        </div>
+        <div class="flex-1 overflow-hidden">
+          <div class="group-carousel relative overflow-hidden">
+            <div class="carousel-track flex transition-transform duration-300" data-visible="0" data-total="{{ medium_tasks|length }}">
+              {% for task in medium_tasks %}
+              <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+                <div class="bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
+                  <div class="absolute top-2 right-2 flex gap-1">
+                    <form method="post" action="{% url 'task_list:toggle_complete' task.id %}">
+                      {% csrf_token %}
+                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border">✓</button>
+                    </form>
+                    <button type="button" class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">i</button>
+                    <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
+                      {% csrf_token %}
+                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border text-red-500">✕</button>
+                    </form>
+                  </div>
+                  <div class="flex flex-col justify-center h-full">
+                    <div class="text-base font-semibold break-words">{{ task.title }}</div>
+                    <div class="text-sm text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              {% for _ in empty_slots_medium %}
+                <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+                  <div class="bg-slate-600/40 rounded-lg h-28 flex items-center justify-center text-slate-400">vazio</div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="w-20 flex justify-center pl-3">
+          <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="medium">➤</button>
+        </div>
+       </div>
+     </section>
+
+    <!-- Prioridade baixa -->
+    <section class="priority-tier">
+       <div class="flex items-center bg-black/40 p-4 rounded-lg backdrop-blur-sm">
+        <div class="w-20 flex justify-center">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center" style="border:3px solid #6ee7b7;">
+            <svg viewBox="0 0 24 24" class="w-6 h-6">
+              <polygon fill="#6ee7b7" points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"></polygon>
+            </svg>
+          </div>
+        </div>
+        <div class="flex-1 overflow-hidden">
+          <div class="group-carousel relative overflow-hidden">
+            <div class="carousel-track flex transition-transform duration-300" data-visible="0" data-total="{{ low_tasks|length }}">
+              {% for task in low_tasks %}
+              <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+                <div class="bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
+                  <div class="absolute top-2 right-2 flex gap-1">
+                    <form method="post" action="{% url 'task_list:toggle_complete' task.id %}">
+                      {% csrf_token %}
+                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border">✓</button>
+                    </form>
+                    <button type="button" class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">i</button>
+                    <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
+                      {% csrf_token %}
+                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border text-red-500" title="Excluir">✕</button>
+                    </form>
+                  </div>
+                  <div class="flex flex-col justify-center h-full">
+                    <div class="text-base font-semibold break-words">{{ task.title }}</div>
+                    <div class="text-sm text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              {% for _ in empty_slots_low %}
+                <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+                  <div class="bg-slate-600/40 rounded-lg h-28 flex items-center justify-center text-slate-400">vazio</div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="w-20 flex justify-center pl-3">
+          <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="low">➤</button>
+        </div>
+       </div>
+     </section>
+    </div>
+    </div>
+  </main>
+
+  <!-- Modal de pesquisa (clicar fora para sair) -->
+  <div id="searchModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-25 modal-backdrop">
+    <div class="search-div modal-panel modal-panel--auto rounded-2xl">
+     <form method="get" action="" class="w-full flex items-center justify-center w-11/12">
+          <input id="search-q" name="q" type="search" value="{{ q }}" placeholder="Digite o título para buscar" class="w-full rounded px-3 py-2 text-slate-100 border" />
+          <!-- Botão de pesquisa -->
+          <button type="submit" class="search-icon-btn">🔍</button>
+     </form>
+    </div>
+  </div>
+
+  <!-- Modal para adicionar tarefa -->
+  <div id="addTaskModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-25 modal-backdrop">
+    <form method="post" action="" id="add-task-form" class="w-full modal-panel modal-panel--auto rounded-2xl">
+      {% csrf_token %}
+      <div class="modal-top">
+        <!-- Canto superior esquerdo do modal -->
+        <div class="modal-info">
+          <!-- div para cada input com label -->
+          <div class="field-row">
+            <!-- input de título -->
+            <label for="add-title">Título</label>
+            <input id="add-title" name="title" required class="rounded px-3 py-2" placeholder="Título da tarefa" />
+          </div>
+          <div class="field-row">
+            <!-- input de prazo -->
+            <label for="add-due_date">Prazo</label>
+            <input id="add-due_date" name="due_date" type="date" class="rounded px-3 py-2" />
+          </div>
+          <div class="field-row">
+            <!-- input de prioridade -->
+            <label for="add-priority">Prioridade</label>
+            <select id="add-priority" name="priority_level" class="rounded px-3 py-2">
+               <option class="select-high text-red-500" value="high">Alta</option>
+               <option class="select-medium text-yellow-400" value="medium">Média</option>
+               <option class="select-low text-green-400" value="low">Baixa</option>
+            </select>
+          </div>
+        </div>
+        <!-- Botão para fechar o modal e salvar a tarefa -->
+        <div class="modal-x-space">
+          <button type="button" class="modal-close-x" data-submit-form="#add-task-form" data-close-modal="#addTaskModal">✕</button>
+        </div>
+      </div>
+      <!-- Descrição abaixo dos inputs, centralizada horizontalmente -->
+      <div class="modal-desc">
+        <textarea id="add-description" name="description" class="rounded px-3 py-2" rows="8"> </textarea>
+      </div>
+    </form>
+  </div>
+
+  <!-- Um modal de edição por tarefa -->
+  {% for task in tasks %}
+  <div id="taskModal-{{ task.id }}" class="fixed inset-0 z-50 hidden bg-black bg-opacity-25 modal-backdrop">
+    <div class="modal-panel modal-panel--auto rounded-2xl">
+      <form method="post" action="{% url 'task_list:update_task' task.id %}" id="form-{{ task.id }}" class="w-full">
+        {% csrf_token %}
+        <div class="modal-top">
+          <div class="modal-info">
+            <div class="field-row">
+              <label for="title-{{ task.id }}">Título</label>
+              <input id="title-{{ task.id }}" name="title" value="{{ task.title }}" class="rounded px-2 py-1" />
+            </div>
+            <div class="field-row">
+              <label for="due_date-{{ task.id }}">Prazo</label>
+              <input id="due_date-{{ task.id }}" name="due_date" value="{{ task.due_date }}" type="date" class="rounded px-2 py-1" />
+            </div>
+            <div class="field-row">
+              <label for="priority-{{ task.id }}">Prioridade</label>
+              <select id="priority-{{ task.id }}" name="priority_level" class="rounded px-2 py-1">
+                 <option class="text-red-500" value="high" {% if task.priority_level == 'high' %}selected{% endif %}>Alta</option>
+                 <option class="text-yellow-400" value="medium" {% if task.priority_level == 'medium' %}selected{% endif %}>Média</option>
+                 <option class="text-green-400" value="low" {% if task.priority_level == 'low' %}selected{% endif %}>Baixa</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-x-space">
+            <button type="button" class="modal-close-x" data-submit-form="#form-{{ task.id }}" data-close-modal="#taskModal-{{ task.id }}">✕</button>
+          </div>
+        </div>
+        <div class="modal-desc">
+          <textarea id="description-{{ task.id }}" name="description" class="rounded px-3 py-2" rows="8">{{ task.description }}</textarea>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Scripts js na pasta própria -->
+  {% block scripts %}
+    <script src="{% static 'js/home.js' %}"></script>
+  {% endblock %}
+
 {% endblock %}
-
-{# JS: sincroniza inputs visíveis (dd/mm/aaaa) com os hidden (YYYY-MM-DD) #}
-<script>
-    (function(){
-      function displayFromIso(s){
-        if(!s) return '';
-        var m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if(!m) return '';
-        return m[3] + '/' + m[2] + '/' + m[1];
-      }
-
-      // Para cada input de data nativa, atualize seu auxiliar de exibição (e mantenha-o sincronizado).
-      document.querySelectorAll('.js-native-date').forEach(function(inp){
-      var id = inp.id; // ex.: 'newTaskDue' ou 'due-<id>'
-      // encontre o span de exibição correspondente: tente id + 'Display' ou 'newTaskDueDisplay'
-      var dispId = (id === 'newTaskDue') ? 'newTaskDueDisplay' : (id + 'Display');
-      var disp = document.getElementById(dispId);
-      function update(){
-        if(!disp) return;
-        disp.textContent = inp.value ? displayFromIso(inp.value) : '';
-      }
-      // inicial
-      update();
-      // quando o valor muda (seletor ou manual), atualize a exibição
-      inp.addEventListener('input', update);
-      inp.addEventListener('change', update);
-    });
-
-  })();
-</script>

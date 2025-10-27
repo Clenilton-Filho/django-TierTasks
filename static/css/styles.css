@@ -1,34 +1,86 @@
-/* CSS simplificado: mantenha apenas helpers mínimos que não são facilmente substituíveis pelas utilitárias do Tailwind CDN.
-   A maioria das regras visuais (espaçamento, hover, transições, layout responsivo) foi movida
-   para classes utilitárias do Tailwind nos templates para que iniciantes vejam tudo no HTML.
-*/
-
-/* Mantenha uma base mínima para inputs/tema de forma que os widgets de formulário renderizados pelo Django
-   fiquem consistentes quando o template não injetar classes do Tailwind. Iniciantes podem remover isso
-   mais tarde, quando adicionarem classes a todos os widgets de formulário. */
-input, textarea, select {
-  background: #0f1724; /* slate-800-ish */
-  color: #e6eef8; /* light text */
-  border: 1px solid #334155; /* slate-700-ish */
-  border-radius: 6px;
-}
-input::placeholder, textarea::placeholder {
-  color: #94a3b8; /* slate-400 */
-}
-input:focus, textarea:focus, select:focus {
-  outline: 2px solid transparent;
-  box-shadow: 0 0 0 3px rgba(96,165,250,0.12); /* subtle blue ring */
-  border-color: #60a5fa; /* blue-400-ish */
+:root{
+  /* variáveis de cor */
+  --color-input-bg: rgba(0,0,0,0.25);
+  --color-input-text: #ffffff;
+  --color-border: #ffffff;
+  --color-placeholder: rgba(169, 76, 150, 0.3);
+  --color-focus-ring: rgba(255, 255, 255, 0.2);
+  --color-focus-border: #ffffff;
+  --color-form-bg: #0f1724;
+  --color-login-bg: #FFB5FA;
+  --color-gradient-start: rgb(39, 43, 87);
+  --color-gradient-end: rgb(169, 76, 150);
+  --color-gradient-start-transparent: rgba(39,43,87,0.35);
+  --color-gradient-end-transparent: rgba(169,76,150,0.35);
+  --color-white: #ffffff;
+  --color-shadow: rgba(0,0,0,0.4);
+  --color-option-bg: #ffffff;
 }
 
-/* Garanta que campos de formulário renderizados pelo Django dentro de .form-fields sejam empilhados e largura cheia
-   para que labels e inputs não apareçam inline por padrão. Este é um pequeno helper amigável para iniciantes enquanto
-   os templates são migrados para utilitárias do Tailwind. */
+/* Evita barras de rolagem internas (uso intencional) */
+html, body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+body{
+    background: linear-gradient(135deg,var(--color-gradient-start),var(--color-gradient-end));
+}
+
+nav{
+    width: 60%;
+}
+
+.login-logout{
+    background-color: var(--color-login-bg);
+    font-size: 1.1rem;
+    border-radius: 7px;
+}
+
+#header-border{
+    left: 50%;
+    margin-left: -2.5vw;
+    transform: translate(0,-50%);
+}
+
+/* Botão de busca */
+.search-icon-btn, .search-icon-btn:focus {
+    outline: none;
+}
+.search-icon-btn {
+  position: static;
+  background: transparent;
+  border: none;
+  color: var(--color-white);
+  font-size: 1.05rem;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+    margin-right: 0.5rem;
+  line-height: 1;
+}
+
+/* Input de busca centralizado */
+#search-q {
+  width: min(60vw, 720px);
+  max-width: 90%;
+  display: block;
+  height: 3.2rem;
+  font-size: 1.25rem;
+  margin: 0 auto;
+}
+
+/* Grupos de tarefas separados verticalmente */
+.priority-tier{
+    margin-bottom:6vh;
+}
+
+/* Base para formulários */
 .form-fields label {
   display: block;
   font-weight: 600;
   margin-bottom: 4px;
-  color: #e6eef8;
+  color: var(--color-input-text);
 }
 .form-fields input,
 .form-fields textarea,
@@ -38,21 +90,191 @@ input:focus, textarea:focus, select:focus {
   padding: 8px 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
-  background: #0f1724;
-  color: #e6eef8;
-  border: 1px solid #334155;
+  background: var(--color-form-bg);
+  color: var(--color-input-text);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
 }
 
-/* Pequena animação de fade-in (mantida como um tiny helper) */
+input, textarea, select {
+  background: var(--color-input-bg);
+  font-size: 1rem;
+  color: var(--color-input-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-placeholder);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  border-color: var(--color-white);
+}
+
+/* Animação suave de aparição */
 .card { animation: fadeIn 0.18s ease; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Helpers mínimos que ainda podem ser referenciados por marcação mais antiga */
-.task-completed { opacity: 0.55; }
+/* Regras de modal: aplicadas a .modal-panel e variantes */
+.modal-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-gradient-end-transparent), var(--color-gradient-start-transparent));
+  border: 3px solid var(--color-white);
 
-/* Mantenha links do footer herdando cor (baixo risco manter) */
-footer a { color: inherit; }
+  /* Elementos são borrados atrás dos modais */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px var(--color-shadow);
+  padding: 1rem;
+  min-height: auto;
+  height: auto;
+  max-height: 90vh;
+  overflow: auto;
+  box-sizing: border-box;
+  max-width: 28rem;
+  width: calc(min(96vw, 28rem));
+}
+
+/* Painel que ajusta largura ao conteúdo */
+.modal-panel.modal-panel--auto {
+  width: auto;
+  display: inline-block;
+  max-width: 90vw;
+  min-width: 24rem;
+  height: auto;
+  min-height: auto;
+}
+
+/* Layout interno dos modais */
+.modal-backdrop .modal-inner,
+.modal-panel .modal-inner {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.modal-info {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  align-self: flex-start;
+  margin-left: 1rem;
+}
+
+.modal-top {
+    display:flex;
+    gap:1rem;
+    align-items:flex-start;
+    width:100%;
+    justify-content: flex-start;
+}
+
+.field-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.field-row label {
+    width: 110px;
+    text-align: right;
+    margin-right: 0.5rem;
+    font-size:1.25rem;
+    color: var(--color-white);
+}
+
+.field-row input, .field-row select {
+    flex: 1 1 auto;
+    font-size: 1.125rem;
+}
+
+/* Inputs dentro do modal */
+.modal-info input{
+  background: transparent;
+  border: none;
+  color: var(--color-white);
+  box-shadow: none;
+  padding: 8px 10px;
+}
+
+.modal-info select {
+  background: transparent;
+  color: var(--color-white);
+  border: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+
+.modal-info option{
+    background-color: var(--color-option-bg);
+    font-weight: 500;
+}
+
+/* Área de descrição no modal */
+.modal-desc {
+  width: 25rem;
+  margin-left: 1rem;
+  margin-top: 0.75rem;
+}
+
+.modal-desc textarea {
+  width: 95%;
+  font-size: 1.1rem;
+  min-height: 50vh;
+  max-height: 70vh;
+  resize: none;
+  overflow: auto;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.modal-inner form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+/* Botão X no topo do modal */
+.modal-x-space {
+    align-items:center;
+    width:45%;
+}
+
+.modal-close-x {
+  position: absolute;
+  top: 3.5rem;
+  right: 2rem;
+  background: transparent;
+  color: var(--color-white);
+  border: none;
+  font-size: 2.4rem;
+  line-height: 1;
+  cursor: pointer;
+  width: auto;
+  padding: 0.4rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  z-index: 120;
+  opacity: 1;
+}
+
+/* Tarefas concluídas */
+.task-completed { opacity: 0.6; }
