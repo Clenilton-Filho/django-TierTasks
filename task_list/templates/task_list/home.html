@@ -3,12 +3,7 @@
 {% block content %}
 
   <!-- Botões que parecem estar dentro do header, mas estão fora-->
-  <div class="fixed top-7 z-40 header-controls-left">
-    <div class="flex flex-row items-center gap-3">
-      <button id="btnOpenAdd" data-open-modal="#addTaskModal" class="p-2 rounded-md text-pink-200 hover:bg-pink-600/20 bg-transparent">➕</button>
-      <button id="btnOpenSearch" data-open-modal="#searchModal" class="p-2 rounded-md text-pink-200 hover:bg-pink-600/20 bg-transparent">🔍</button>
-    </div>
-  </div>
+
 
   {# Conteúdo principal entre o header e o footer #}
   <main class="w-full px-6 pb-12 pt-6 flex items-center justify-center">
@@ -23,12 +18,7 @@
            <div class="flex items-center bg-black/40 p-4 rounded-lg backdrop-blur-sm">
             <!-- ícone do grupo -->
             <div class="w-20 flex justify-center">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center" style="border:3px solid #ff5a5f;">
-                <!-- SVG estrela -->
-                <svg viewBox="0 0 24 24" class="w-6 h-6">
-                  <polygon fill="#ff5a5f" points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"></polygon>
-                </svg>
-              </div>
+              <img src="/static/images/estrela_vermelha.png" style="width: 50%; height: 50%;">
             </div>
 
             <!-- 3 slots fixos -->
@@ -79,11 +69,7 @@
     <section class="priority-tier">
        <div class="flex items-center bg-black/40 p-4 rounded-lg backdrop-blur-sm">
         <div class="w-20 flex justify-center">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center" style="border:3px solid #ffd166;">
-            <svg viewBox="0 0 24 24" class="w-6 h-6">
-              <polygon fill="#ffd166" points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"></polygon>
-            </svg>
-          </div>
+          <img src="/static/images/estrela_amarela.png" style="width: 50%; height: 50%;">
         </div>
         <div class="flex-1 overflow-hidden">
           <div class="group-carousel relative overflow-hidden">
@@ -127,11 +113,7 @@
     <section class="priority-tier">
        <div class="flex items-center bg-black/40 p-4 rounded-lg backdrop-blur-sm">
         <div class="w-20 flex justify-center">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center" style="border:3px solid #6ee7b7;">
-            <svg viewBox="0 0 24 24" class="w-6 h-6">
-              <polygon fill="#6ee7b7" points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"></polygon>
-            </svg>
-          </div>
+          <img src="/static/images/estrela_verde.png" style="width: 50%; height: 50%;">
         </div>
         <div class="flex-1 overflow-hidden">
           <div class="group-carousel relative overflow-hidden">
