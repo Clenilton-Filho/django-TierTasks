@@ -27,17 +27,23 @@
                 <div class="carousel-track flex transition-transform duration-300" data-visible="0" data-total="{{ high_tasks|length }}">
                   {% for task in high_tasks %}
                   <div class="carousel-item flex-shrink-0 w-1/3 px-3">
-                    <div class="bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
+                    <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="filter hover:saturate-200 bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
                       <!-- Botões no canto superior direito -->
-                      <div class="absolute top-2 right-2 flex gap-1">
-                        <form method="post" action="{% url 'task_list:toggle_complete' task.id %}">
+                      <div class="absolute top-2 right-2 flex gap-2">
+                        <form class="flex justify-center items-center" method="post" action="{% url 'task_list:toggle_complete' task.id %}">
                           {% csrf_token %}
-                          <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" title="Marcar/Desmarcar">✓</button>
+                          <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150" title="Marcar/Desmarcar">
+                             <img src="/static/images/tarefa_completada.png" class="task-btn h-5 w-5">
+                          </button>
                         </form>
-                        <button type="button" class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">i</button>
-                        <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
+                        <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150" type="button" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">
+                            <img src="/static/images/configurar_tarefa.png" class="task-btn h-5 w-5">
+                        </button>
+                        <form class="flex justify-center items-center" method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
                           {% csrf_token %}
-                          <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border text-red-500" title="Excluir">✕</button>
+                          <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150"  title="Excluir">
+                              <img src="/static/images/apagar_tarefa.png" class="task-btn h-5 w-5">
+                          </button>
                         </form>
                       </div>
                       <!-- Prazo da tarefa -->
@@ -60,7 +66,9 @@
 
             <!-- botão alternar (direita), desativado por padrão -->
             <div class="w-20 flex justify-center pl-3">
-              <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="high">➤</button>
+              <button class="toggle-btn disabled:opacity-40 h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20" data-group="high">
+                <img src="/static/images/seta_proximo.png" class="h-12 filter invert">
+              </button>
             </div>
            </div>
         </section>
@@ -75,17 +83,23 @@
           <div class="group-carousel relative overflow-hidden">
             <div class="carousel-track flex transition-transform duration-300" data-visible="0" data-total="{{ medium_tasks|length }}">
               {% for task in medium_tasks %}
-              <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+              <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="filter hover:saturate-200 carousel-item flex-shrink-0 w-1/3 px-3">
                 <div class="bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
-                  <div class="absolute top-2 right-2 flex gap-1">
-                    <form method="post" action="{% url 'task_list:toggle_complete' task.id %}">
+                  <div class="absolute top-2 right-2 flex gap-2">
+                    <form class="flex justify-center items-center" method="post" action="{% url 'task_list:toggle_complete' task.id %}">
                       {% csrf_token %}
-                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border">✓</button>
+                      <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150" title="Marcar/Desmarcar">
+                         <img src="/static/images/tarefa_completada.png" class="task-btn h-5 w-5">
+                      </button>
                     </form>
-                    <button type="button" class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">i</button>
-                    <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
+                    <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150" type="button" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">
+                        <img src="/static/images/configurar_tarefa.png" class="task-btn h-5 w-5">
+                    </button>
+                    <form class="flex justify-center items-center" method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
                       {% csrf_token %}
-                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border text-red-500">✕</button>
+                      <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150"  title="Excluir">
+                          <img src="/static/images/apagar_tarefa.png" class="task-btn h-5 w-5">
+                      </button>
                     </form>
                   </div>
                   <div class="flex flex-col justify-center h-full">
@@ -104,7 +118,9 @@
           </div>
         </div>
         <div class="w-20 flex justify-center pl-3">
-          <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="medium">➤</button>
+          <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="medium">
+              <img src="/static/images/seta_proximo.png" class="h-12 filter invert">
+          </button>
         </div>
        </div>
      </section>
@@ -119,17 +135,23 @@
           <div class="group-carousel relative overflow-hidden">
             <div class="carousel-track flex transition-transform duration-300" data-visible="0" data-total="{{ low_tasks|length }}">
               {% for task in low_tasks %}
-              <div class="carousel-item flex-shrink-0 w-1/3 px-3">
+              <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="filter hover:saturate-200 carousel-item flex-shrink-0 w-1/3 px-3">
                 <div class="bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
-                  <div class="absolute top-2 right-2 flex gap-1">
-                    <form method="post" action="{% url 'task_list:toggle_complete' task.id %}">
+                  <div class="absolute top-2 right-2 flex gap-2">
+                    <form class="flex justify-center items-center" method="post" action="{% url 'task_list:toggle_complete' task.id %}">
                       {% csrf_token %}
-                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border">✓</button>
+                      <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150" title="Marcar/Desmarcar">
+                         <img src="/static/images/tarefa_completada.png" class="task-btn h-5 w-5">
+                      </button>
                     </form>
-                    <button type="button" class="w-6 h-6 rounded-full text-xs flex items-center justify-center border" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">i</button>
-                    <form method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
+                    <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150" type="button" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">
+                        <img src="/static/images/configurar_tarefa.png" class="task-btn h-5 w-5">
+                    </button>
+                    <form class="flex justify-center items-center" method="post" action="{% url 'task_list:delete_task' task.id %}" class="m-0 confirm-delete">
                       {% csrf_token %}
-                      <button class="w-6 h-6 rounded-full text-xs flex items-center justify-center border text-red-500" title="Excluir">✕</button>
+                      <button class="filter hover:saturate-200 transform hover:scale-110 transition-transform duration-150"  title="Excluir">
+                          <img src="/static/images/apagar_tarefa.png" class="task-btn h-5 w-5">
+                      </button>
                     </form>
                   </div>
                   <div class="flex flex-col justify-center h-full">
@@ -148,7 +170,9 @@
           </div>
         </div>
         <div class="w-20 flex justify-center pl-3">
-          <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="low">➤</button>
+          <button class="toggle-btn h-28 w-20 flex items-center justify-center rounded-md bg-white/10 text-white hover:bg-white/20 disabled:opacity-40" data-group="low">
+              <img src="/static/images/seta_proximo.png" class="h-12 filter invert">
+          </button>
         </div>
        </div>
      </section>
