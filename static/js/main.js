@@ -12,7 +12,7 @@
       });
     });
 
-    // Confirmação de exclusão para forms com .confirm-delete
+    // Confirmação de exclusão para forms com .confirm-delete (botão de excluir tarefa)
     document.querySelectorAll('form.confirm-delete').forEach(function(f){
       if (f.dataset.tierConfirmInit) return;
       f.dataset.tierConfirmInit = '1';

@@ -24,7 +24,20 @@
     document.querySelectorAll('[data-open-modal]').forEach(function(btn){
       if(btn.dataset.tierOpenInit) return;
       btn.dataset.tierOpenInit = '1';
-      btn.addEventListener('click', function(){
+      btn.addEventListener('click', function(e){
+        // Botões/forms que possam existir dentro do elemento que abre um modal
+        var interactiveEl = e.target.closest('button,form');
+        if(interactiveEl){
+
+            // Se o botão/form também abre um modal, permite (ex: botão de modificar)
+            var interactiveNearestOpener = interactiveEl.closest('[data-open-modal]');
+            var interactiveIsOpener = interactiveEl.hasAttribute('data-open-modal') || (interactiveNearestOpener && interactiveNearestOpener !== btn);
+
+            // Se o botão/form não abre um modal, ignorar para não abrir o modal em sequência (ex: botão de excluir)
+            if(interactiveNearestOpener === btn && !interactiveIsOpener){
+              return;
+            }
+          }
         var sel = btn.getAttribute('data-open-modal');
         if(!sel) return;
         openModal(sel, btn);
