@@ -1,10 +1,15 @@
 from pathlib import Path
+import os
+import dj_database_url
+from dotenv import load_dotenv
+
+# Carrega o env
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-t-6#frvwp7g%086slrb+@guwt)f5%wpsjxc&&mdfe^$8#mztl*'
-
 # True para desenvolvimento
+SECRET_KEY='django-insecure-t-6#frvwp7g%086slrb+@guwt)f5%wpsjxc&&mdfe^$8#mztl*'
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -52,15 +57,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'TierTasks.wsgi.application'
 
-
-# Banco de dados
+# Pega as infos do banco no env
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'), 
+        conn_max_age=600
+    )
 }
-
 
 # Validação de senhas
 AUTH_PASSWORD_VALIDATORS = [

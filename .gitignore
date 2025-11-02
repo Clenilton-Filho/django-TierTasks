@@ -1,6 +1,9 @@
 # .gitignore gerado para projeto Django/Python (Windows)
 # Ajuste conforme necessário
 
+# Arquivos de ambiente e segredos
+.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -28,10 +31,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Django
-# Banco de dados SQLite local
-db.sqlite3
-db.sqlite3-journal
-db.sqlite3.bak
+
 # Arquivos locais de configuração
 local_settings.py
 # Diretório usado para upload de mídia em desenvolvimento
