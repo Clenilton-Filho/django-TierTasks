@@ -1,2 +1,4 @@
-Django==5.2.7
-
+Django
+dj_database_url
+python-dotenv
+psycopg2-binary
