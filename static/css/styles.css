@@ -6,7 +6,7 @@
   --color-placeholder: rgba(169, 76, 150, 0.3);
   --color-focus-ring: rgba(255, 255, 255, 0.2);
   --color-focus-border: #ffffff;
-  --color-form-bg: #0f1724;
+  --color-form-bg: #ffffff;
   --color-login-bg: #FFB5FA;
   --color-gradient-start: rgb(39, 43, 87);
   --color-gradient-end: rgb(169, 76, 150);
@@ -56,8 +56,14 @@ nav{
   font-size: 1.05rem;
   cursor: pointer;
   padding: 0.15rem 0.25rem;
-    margin-right: 0.5rem;
+  margin-right: 0.5rem;
   line-height: 1;
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #8c5ca5 0%, #a54c97 100%);
+  /* Você pode adicionar um efeito hover aqui se quiser: */
+  transition: opacity 0.3s ease;
 }
 
 /* Input de busca centralizado */
@@ -78,9 +84,7 @@ nav{
 /* Base para formulários */
 .form-fields label {
   display: block;
-  font-weight: 600;
   margin-bottom: 4px;
-  color: var(--color-input-text);
 }
 .form-fields input,
 .form-fields textarea,
@@ -91,9 +95,10 @@ nav{
   margin-bottom: 10px;
   box-sizing: border-box;
   background: var(--color-form-bg);
-  color: var(--color-input-text);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  color: #000;
+  border: 3px solid #9A9A9A;
+  border-radius: 90px;
+  margin-bottom: 6%;
 }
 
 input, textarea, select {
@@ -110,7 +115,6 @@ input::placeholder, textarea::placeholder {
 input:focus, textarea:focus, select:focus {
   outline: 2px solid transparent;
   box-shadow: 0 0 0 3px var(--color-focus-ring);
-  border-color: var(--color-white);
 }
 
 /* Animação suave de aparição */

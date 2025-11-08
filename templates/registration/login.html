@@ -1,25 +1,64 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="w-full flex items-center justify-center py-6 px-4">
-  <div class="w-full max-w-md bg-slate-700 shadow rounded p-6 text-center">
-    <h3 class="text-center mb-3 text-lg font-semibold text-slate-100">Entrar</h3>
-    <form method="post" class="mt-2" id="loginForm">
-      {% csrf_token %}
-      <div class="form-fields text-start space-y-2">
-        <label for="id_username" class="block text-sm font-medium text-slate-100">Nome de usuário</label>
-        {{ form.username }}
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TierTasks</title>
 
-        <label for="id_password" class="block text-sm font-medium text-slate-100">Senha</label>
-        {{ form.password }}
-      </div>
-      <div class="mt-3">
-        <button class="w-full bg-blue-600 text-white px-4 py-2 rounded">Entrar</button>
-      </div>
-    </form>
-    <div class="text-center mt-3 text-sm">
-      <a class="text-blue-300" href="{% url 'task_list:register' %}">Criar conta</a>
-    </div>
-  </div>
-</div>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
-{% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'ABeeZee', sans-serif !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-slate-100 flex flex-col overflow-hidden">
+    <main class="flex-1 w-full pt-20 pb-32 flex items-center justify-center">
+        <div class="w-full max-w-6xl px-6">
+            {% block content %}
+                <div class="w-full flex-1 flex items-center justify-center py-6 px-4">
+                    <div class="w-full max-w-md bg-white shadow rounded-xl px-6 py-6 border-4 border-[#FFB5FA]">
+                        <h3 class="text-left mb-6 text-3xl font-semibold text-black">Entrar</h3>
+                        <form method="post" class="mt-2" id="loginForm">
+                            {% csrf_token %}
+                            <div class="form-fields text-start space-y-2">
+                                <label for="id_username" class="text-lg text-black">
+                                    <span class="hidden sm:inline">Nome de usuário</span>
+                                    <span class="sm:hidden">Usuário</span>
+                                </label>
+                                {{ form.username }}
+
+                                <label for="id_password" class="text-lg text-black">Senha</label>
+                                {{ form.password }}
+                            </div>
+                            <div class="mt-6 flex justify-center">
+                                <button class="w-1/2 btn-gradient text-white px-4 py-3 rounded-xl text-xl font-semibold">Entrar</button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-1 text-sm">
+                            <a class="text-blue-700" href="{% url 'task_list:register' %}">Criar conta</a>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 right-0 bg-black/50 text-slate-100 py-2 z-30">
+        <div class="max-w-5xl mx-auto text-center px-4">
+            <small class="text-slate-300">TierTasks © 2025</small>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/modals.js' %}"></script>
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

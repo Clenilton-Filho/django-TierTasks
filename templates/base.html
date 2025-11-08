@@ -5,50 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TierTasks</title>
-
+    
     <!-- CDN do tailwind  -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <!-- Fonte  -->
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'ABeeZee', sans-serif !important; 
+        }
+    </style>
+
   </head>
   <body class="min-h-screen text-slate-100 flex flex-col overflow-hidden">
-
-    <!-- Header -->
-    <nav class="fixed top-0 left-1/2 transform -translate-x-1/2 bg-transparent z-30">
-      <div class="h-20 flex items-center relative">
-        
-        <!-- Área esquerda -->
-        <div class="gap-3">
-          <div class="flex items-center flex-row">
-            <img id="btnOpenAdd" data-open-modal="#addTaskModal" src="/static/images/criar_tarefa.png" class="p-2 rounded-md hover:bg-pink-600/20 bg-transparent cursor-pointer" style="width: 50px; height: 50px;">
-            <img id="btnOpenSearch" data-open-modal="#searchModal" src="/static/images/buscar_tarefa.png" class="p-2 rounded-md hover:bg-pink-600/20 bg-transparent cursor-pointer" style="width: 50px; height: 50px;">
-          </div>
-        </div>
-
-        <!-- Título centralizado -->
-        <a class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-xl text-white pointer-events-auto" href="{% url 'task_list:home' %}">TierTasks</a>
-
-        <!-- Área direita -->
-        <div class="ml-auto flex items-center gap-3">
-          <div class="text-right mr-2">
-            {% if user.is_authenticated %}
-              <div class="text-sm text-slate-400">Bem-vindo(a),</div>
-              <div class="font-semibold text-slate-100">{{ user.get_full_name|default:user.username }}</div>
-            {% endif %}
-          </div>
-
-          {% if user.is_authenticated %}
-            <form method="post" action="{% url 'task_list:logout' %}" class="inline-block">
-              {% csrf_token %}
-              <button type="submit" class="login-logout px-3 py-1 text-white">Logout</button>
-            </form>
-          {% else %}
-            <a class="login-logout px-3 py-1 rounded text-white" href="{% url 'task_list:register' %}">Registrar-se</a>
-          {% endif %}
-        </div>
-      </div>
-      <div id="header-border" class="h-1.5 bg-pink-300/95 rounded-sm" style="width:110%;"></div>
-    </nav>
 
     <!-- Área para as páginas, conteúdo centralizado-->
     <main class="flex-1 w-full pt-20 pb-12 flex items-start justify-center">
@@ -89,4 +61,4 @@
     <script src="{% static 'js/modals.js' %}"></script>
     {% block scripts %}{% endblock %}
    </body>
- </html>
+</html>
