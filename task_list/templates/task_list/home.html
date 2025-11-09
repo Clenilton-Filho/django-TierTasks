@@ -5,7 +5,7 @@
     <!-- Header -->
     <nav class="fixed top-0 left-1/2 transform -translate-x-1/2 bg-transparent z-30">
       <div class="h-20 flex items-center relative">
-        
+
         <!-- Área esquerda -->
         <div class="gap-3">
           <div class="flex items-center flex-row">
@@ -150,7 +150,7 @@
                   <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 flex items-center justify-center text-slate-400">
                       <img src="/static/images/criar_tarefa_barra.png" class="w-[35px] h-[35px]">
                   </div>
-                </div>              
+                </div>
               {% endfor %}
             </div>
           </div>
@@ -204,7 +204,7 @@
                   <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 flex items-center justify-center text-slate-400">
                       <img src="/static/images/criar_tarefa_barra.png" class="w-[35px] h-[35px]">
                   </div>
-                </div> 
+                </div>
               {% endfor %}
             </div>
           </div>
@@ -224,13 +224,13 @@
   <div id="searchModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-25 modal-backdrop">
     <div class="search-div modal-panel modal-panel--auto rounded-2xl">
      <form method="get" action="" class="w-full flex items-center justify-between gap-4">
-        <input 
-          id="search-q" 
-          name="q" 
-          type="search" 
-          value="{{ q }}" 
-          placeholder="Digite o título para buscar" 
-          class="w-full rounded px-3 py-2 text-slate-100 border" 
+        <input
+          id="search-q"
+          name="q"
+          type="search"
+          value="{{ q }}"
+          placeholder="Digite o título para buscar"
+          class="w-full rounded px-3 py-2 text-slate-100 border"
         />
         <!-- Botão de pesquisa -->
         <button type="submit" class="search-icon-btn h-14 w-14">
@@ -245,20 +245,25 @@
     <form method="post" action="" id="add-task-form" class="w-full modal-panel modal-panel--auto rounded-2xl">
       {% csrf_token %}
       <div class="modal-top">
+
         <!-- Canto superior esquerdo do modal -->
         <div class="modal-info">
+
           <!-- div para cada input com label -->
           <div class="field-row">
+
             <!-- input de título -->
             <label for="add-title">Título</label>
             <input id="add-title" name="title" required class="rounded px-3 py-2" placeholder="Título da tarefa" />
           </div>
           <div class="field-row">
+
             <!-- input de prazo -->
             <label for="add-due_date">Prazo</label>
             <input id="add-due_date" name="due_date" type="date" class="rounded px-3 py-2" />
           </div>
           <div class="field-row">
+
             <!-- input de prioridade -->
             <label for="add-priority">Prioridade</label>
             <select id="add-priority" name="priority_level" class="rounded px-3 py-2">
@@ -268,15 +273,15 @@
             </select>
           </div>
         </div>
+
         <!-- Botão para fechar o modal e salvar a tarefa -->
-        <div class="modal-x-space">
-          <button type="button" class="modal-close-x" data-submit-form="#add-task-form" data-close-modal="#addTaskModal">✕</button>
-        </div>
+        <button type="button" class="modal-close-x" data-submit-form="#add-task-form" data-close-modal="#addTaskModal">
+           <img class="h-[5rem] w-[5rem]" src="/static/images/minimizar_modal.png">
+        </button>
       </div>
-      <!-- Descrição abaixo dos inputs, centralizada horizontalmente -->
-      <div class="modal-desc">
-        <textarea id="add-description" name="description" class="rounded px-3 py-2" rows="8"> </textarea>
-      </div>
+
+      <!-- Descrição abaixo dos inputs -->
+      <textarea id="add-description" name="description" class="description rounded px-3 py-2" rows="8"> </textarea>
     </form>
   </div>
 
@@ -305,13 +310,11 @@
               </select>
             </div>
           </div>
-          <div class="modal-x-space">
-            <button type="button" class="modal-close-x" data-submit-form="#form-{{ task.id }}" data-close-modal="#taskModal-{{ task.id }}">✕</button>
-          </div>
+          <button type="button" class="modal-close-x" data-submit-form="#form-{{ task.id }}" data-close-modal="#taskModal-{{ task.id }}">
+             <img class="h-[5rem] w-[5rem]" src="/static/images/minimizar_modal.png">
+          </button>
         </div>
-        <div class="modal-desc">
-          <textarea id="description-{{ task.id }}" name="description" class="rounded px-3 py-2" rows="8">{{ task.description }}</textarea>
-        </div>
+        <textarea id="description-{{ task.id }}" name="description" class="description px-3 py-2" rows="8">{{ task.description }}</textarea>
       </form>
     </div>
   </div>
