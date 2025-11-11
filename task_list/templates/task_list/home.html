@@ -3,53 +3,45 @@
 {% block content %}
 
     <!-- Header -->
-    <nav class="fixed top-0 left-1/2 transform -translate-x-1/2 bg-transparent z-30">
-      <div class="h-20 flex items-center relative">
+    <nav class="header">
+      <div class="header-div h-[7vh] w-full flex">
 
         <!-- Área esquerda -->
-        <div class="gap-3">
-          <div class="flex items-center flex-row">
-            <img id="btnOpenAdd" data-open-modal="#addTaskModal" src="/static/images/criar_tarefa.png" class="p-2 rounded-md hover:bg-pink-600/20 bg-transparent cursor-pointer" style="width: 50px; height: 50px;">
-            <img id="btnOpenSearch" data-open-modal="#searchModal" src="/static/images/buscar_tarefa.png" class="p-2 rounded-md hover:bg-pink-600/20 bg-transparent cursor-pointer" style="width: 50px; height: 50px;">
-          </div>
+        <div class="flex items-center gap-3">
+            <img id="btnOpenAdd" data-open-modal="#addTaskModal" src="/static/images/criar_tarefa.png" class="hover:bg-pink-600/20 cursor-pointer h-[30px] w-[30px]">
+            <img id="btnOpenSearch" data-open-modal="#searchModal" src="/static/images/buscar_tarefa.png" class="hover:bg-pink-600/20 cursor-pointer h-[30px] w-[30px]">
         </div>
 
         <!-- Título centralizado -->
-        <a class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-xl text-white pointer-events-auto" href="{% url 'task_list:home' %}">TierTasks</a>
+        <div class="title-div">
+            <a class="text-xl text-white pointer-events-auto" href="{% url 'task_list:home' %}">TierTasks</a>
+        </div>
 
         <!-- Área direita -->
-        <div class="ml-auto flex items-center gap-3">
+        <div class="flex items-center gap-3">
           <div class="text-right mr-2">
             {% if user.is_authenticated %}
               <div class="text-sm text-slate-400">Bem-vindo(a),</div>
-              <div class="font-semibold text-slate-100">{{ user.get_full_name|default:user.username }}</div>
+              <div class="text-slate-100">{{ user.get_full_name|default:user.username }}</div>
             {% endif %}
           </div>
 
-          {% if user.is_authenticated %}
-            <form method="post" action="{% url 'task_list:logout' %}" class="inline-block">
-              {% csrf_token %}
-              <button type="submit" class="login-logout px-3 py-1 text-white">Logout</button>
-            </form>
-          {% else %}
-            <a class="login-logout px-3 py-1 rounded text-white" href="{% url 'task_list:register' %}">Registrar-se</a>
-          {% endif %}
+          <!-- Botão de logout -->
+          <form method="post" action="{% url 'task_list:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout px-3 py-1 text-white">Logout</button>
+          </form>
         </div>
       </div>
-      <div id="header-border" class="h-1.5 bg-pink-300/95 rounded-sm" style="width:110%;"></div>
+      <div id="header-border" class="h-1 bg-pink-300/95 rounded-sm w-[110%]"></div>
     </nav>
 
-  {# Conteúdo principal entre o header e o footer #}
-  <main class="w-full px-6 pb-12 pt-6 flex items-center justify-center">
-    <div class="w-full min-h-[calc(100vh-7rem)] flex items-center">
-
-     <!-- Grupos para as prioridades-->
-    <div class="w-full">
+  {# Conteúdo principal entre o header e o footer, ocupando o espaço restante #}
+  <main class="main-home w-full flex flex-1 items-center justify-center gap-10">
 
     <!-- Prioridade Alta -->
-        <section class="priority-tier">
-           <!-- fundo escuro cobrindo do ícone até o botão de alternar -->
-           <div class="flex items-center bg-black/40 p-7 rounded-lg backdrop-blur-sm">
+        <section class="priority-tier flex items-center bg-black/40 py-3 px-4 rounded-lg backdrop-blur-sm">
+
             <!-- ícone do grupo -->
             <div class="w-20 flex justify-center">
               <img src="/static/images/estrela_vermelha.png" class="w-[50%] h-[50%]">
@@ -62,6 +54,7 @@
                   {% for task in high_tasks %}
                   <div class="carousel-item flex-shrink-0 w-1/3 px-3">
                     <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="transition-transform duration-150 hover:scale-105 bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
+
                       <!-- Botões no canto superior direito -->
                       <div class="absolute top-2 right-2 flex gap-2">
                         <form class="flex justify-center items-center" method="post" action="{% url 'task_list:toggle_complete' task.id %}">
@@ -80,6 +73,7 @@
                           </button>
                         </form>
                       </div>
+
                       <!-- Prazo da tarefa -->
                       <div class="flex flex-col justify-center h-full">
                         <div class="text-base font-semibold break-words">{{ task.title }}</div>
@@ -88,6 +82,7 @@
                     </div>
                   </div>
                   {% endfor %}
+
                   <!-- Criando slots vazios usando a quantidade recebida da view -->
                   {% for _ in empty_slots_high %}
                     <div class="carousel-item flex-shrink-0 w-1/3 px-3">
@@ -106,12 +101,10 @@
                 <img src="/static/images/seta_proximo.png" class="h-12 filter invert">
               </button>
             </div>
-           </div>
         </section>
 
     <!-- Prioridade média -->
-    <section class="priority-tier">
-       <div class="flex items-center bg-black/40 p-7 rounded-lg backdrop-blur-sm">
+      <section class="priority-tier flex items-center bg-black/40 py-3 px-4 rounded-lg backdrop-blur-sm">
         <div class="w-20 flex justify-center">
           <img src="/static/images/estrela_amarela.png" class="w-[50%] h-[50%]">
         </div>
@@ -160,12 +153,10 @@
               <img src="/static/images/seta_proximo.png" class="h-12 filter invert">
           </button>
         </div>
-       </div>
      </section>
 
     <!-- Prioridade baixa -->
-    <section class="priority-tier">
-       <div class="flex items-center bg-black/40 p-7 rounded-lg backdrop-blur-sm">
+     <section class="priority-tier flex items-center bg-black/40 py-3 px-4 rounded-lg backdrop-blur-sm">
         <div class="w-20 flex justify-center">
           <img src="/static/images/estrela_verde.png" class="w-[50%] h-[50%]">
         </div>
@@ -214,10 +205,7 @@
               <img src="/static/images/seta_proximo.png" class="h-12 filter invert">
           </button>
         </div>
-       </div>
      </section>
-    </div>
-    </div>
   </main>
 
   <!-- Modal de pesquisa (clicar fora para sair) -->
@@ -233,7 +221,7 @@
           class="w-full rounded px-3 py-2 text-slate-100 border"
         />
         <!-- Botão de pesquisa -->
-        <button type="submit" class="search-icon-btn h-14 w-14">
+        <button type="submit" class="search-icon-btn h-14 w-14 py-[0.15rem] px-[0.25rem] right-[0.5rem]">
           <img src="/static/images/buscar_tarefas_barra.png" class="search-icon-btn">
         </button>
      </form>

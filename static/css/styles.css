@@ -17,69 +17,67 @@
   --color-option-bg: #ffffff;
 }
 
-/* Evita barras de rolagem internas (uso intencional) */
-html, body {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
-
 body{
     background: linear-gradient(135deg,var(--color-gradient-start),var(--color-gradient-end));
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'ABeeZee', sans-serif
 }
 
-nav{
-    width: 60%;
+.header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60vw;
 }
 
-.login-logout{
-    background-color: var(--color-login-bg);
-    font-size: 1.1rem;
-    border-radius: 7px;
+.header-div{
+    justify-content: space-between;
 }
 
-#header-border{
+.title-div{
+    position: fixed;
+    line-height: 7vh;
     left: 50%;
-    margin-left: -2.5vw;
-    transform: translate(0,-50%);
+    transform: translate(-50%,0);
 }
 
-/* Botão de busca */
-.search-icon-btn, .search-icon-btn:focus {
-    outline: none;
-}
-.search-icon-btn {
-  position: static;
-  background: transparent;
-  border: none;
-  color: var(--color-white);
-  font-size: 1.05rem;
-  cursor: pointer;
-  padding: 0.15rem 0.25rem;
-  margin-right: 0.5rem;
-  line-height: 1;
+/* botão de logout */
+.logout{
+    background-color: var(--color-login-bg);
+    font-size: 1.8vh;
+    border-radius: 7px;
+    text-shadow:
+      -1px -1px 0 #272b57,
+      1px -1px 0 #272b57,
+      -1px 1px 0 #272b57,
+      1px 1px 0 #272b57;
 }
 
+/* botões com gradiente (telas de login e registro)*/
 .btn-gradient {
   background: linear-gradient(90deg, #8c5ca5 0%, #a54c97 100%);
   /* Você pode adicionar um efeito hover aqui se quiser: */
   transition: opacity 0.3s ease;
 }
 
-
 /* Input de busca centralizado */
 #search-q {
-  width: min(60vw, 720px);
-  max-width: 90%;
-  display: block;
-  height: 3.2rem;
-  font-size: 1.25rem;
-  margin: 0 auto;
+  min-width: 45vw;
+  height: 5.5vh;
+  font-size: 2.5vh;
+}
+
+.main-home{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Grupos de tarefas separados verticalmente */
 .priority-tier{
-    margin-bottom:6vh;
+    width: 68vw;
 }
 
 /* Base para formulários */
@@ -234,6 +232,7 @@ input:focus, textarea:focus, select:focus {
   margin: auto;
   width: 25rem;
   margin-top: 0.75rem;
+  color: white;
   font-size: 1.1rem;
   min-height: 50vh;
   max-height: 70vh;
