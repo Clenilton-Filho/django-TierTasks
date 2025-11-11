@@ -36,17 +36,17 @@ body{
     justify-content: space-between;
 }
 
+/* título fixo e centralizado*/
 .title-div{
     position: fixed;
-    line-height: 7vh;
     left: 50%;
     transform: translate(-50%,0);
 }
 
 /* botão de logout */
 .logout{
+    height: fit-content;
     background-color: var(--color-login-bg);
-    font-size: 1.8vh;
     border-radius: 7px;
     text-shadow:
       -1px -1px 0 #272b57,
@@ -78,6 +78,7 @@ body{
 /* Grupos de tarefas separados verticalmente */
 .priority-tier{
     width: 68vw;
+    min-width: 790px;
 }
 
 /* Base para formulários */
@@ -117,56 +118,35 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
-/* Animação suave de aparição */
-.card { animation: fadeIn 0.18s ease; }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* Regras de modal: aplicadas a .modal-panel e variantes */
 .modal-panel {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   background: linear-gradient(180deg, var(--color-gradient-start-transparent), var(--color-gradient-end-transparent));
   border: 3px solid var(--color-white);
 
   /* Elementos são borrados atrás dos modais */
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 6px 18px var(--color-shadow);
   padding: 1rem;
-  min-height: auto;
-  height: auto;
   max-height: 90vh;
-  overflow: auto;
   box-sizing: border-box;
-  max-width: 28rem;
-  width: calc(min(96vw, 28rem));
+  width: fit-content;
 }
 
-/* Modal que ajusta largura ao conteúdo */
-.modal-panel.modal-panel--auto {
-  width: auto;
-  display: inline-block;
-  max-width: 90vw;
-  min-width: 25rem;
-  height: auto;
-  min-height: auto;
-}
-
-/* Layout interno dos modais */
-.modal-backdrop .modal-inner,
-.modal-panel .modal-inner {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+/* parte superior dos modais */
+.modal-top {
+    display:flex;
+    justify-content:space-between;
+    margin: auto;
+    align-items: center;
+    width:95%;
 }
 
 /* div com nome, prazo e prioridade nos modais */
@@ -178,14 +158,6 @@ input:focus, textarea:focus, select:focus {
   align-self: flex-start;
 }
 
-/* parte superior dos modais */
-.modal-top {
-    display:flex;
-    justify-content:space-between;
-    margin: auto;
-    align-items: center;
-    width:95%;
-}
 
 /* div de input nos modais */
 .field-row {
@@ -200,28 +172,19 @@ input:focus, textarea:focus, select:focus {
     color: var(--color-white);
 }
 
+/* Inputs dentro do modal */
 .field-row input, .field-row select {
+    background: transparent;
+    border: none;
+    color: var(--color-white);
     flex: 1 1 auto;
     font-size: 1.125rem;
+    padding: 8px 10px;
+    border-radius: 6px;
+    box-shadow: none;
 }
 
-/* Inputs dentro do modal */
-.modal-info input{
-  background: transparent;
-  border: none;
-  color: var(--color-white);
-  box-shadow: none;
-  padding: 8px 10px;
-}
-
-.modal-info select {
-  background: transparent;
-  color: var(--color-white);
-  border: none;
-  padding: 8px 10px;
-  border-radius: 6px;
-}
-
+/* opções dentro dos selects de prioridades */
 .modal-info option{
     background-color: var(--color-option-bg);
     font-weight: 500;
@@ -229,9 +192,8 @@ input:focus, textarea:focus, select:focus {
 
 /* input de descrição */
 .description {
-  margin: auto;
+  margin: 0.75rem auto auto auto;
   width: 25rem;
-  margin-top: 0.75rem;
   color: white;
   font-size: 1.1rem;
   min-height: 50vh;
@@ -240,14 +202,6 @@ input:focus, textarea:focus, select:focus {
   overflow: auto;
   box-sizing: border-box;
   border-radius: 10px;
-}
-
-.modal-inner form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  align-items: stretch;
 }
 
 /* Tarefas concluídas */
