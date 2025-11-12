@@ -10,11 +10,10 @@
   --color-login-bg: #FFB5FA;
   --color-gradient-start: rgb(39, 43, 87);
   --color-gradient-end: rgb(169, 76, 150);
-  --color-gradient-start-transparent: rgba(39,43,87,0.35);
-  --color-gradient-end-transparent: rgba(169,76,150,0.35);
+  --color-gradient-start-transparent: rgba(39, 43, 87, 0.8);
+  --color-gradient-end-transparent: rgba(169, 76, 150, 0.8);
   --color-white: #ffffff;
   --color-shadow: rgba(0,0,0,0.4);
-  --color-option-bg: #ffffff;
 }
 
 body{
@@ -75,12 +74,6 @@ body{
     justify-content: center;
 }
 
-/* Grupos de tarefas separados verticalmente */
-.priority-tier{
-    width: 68vw;
-    min-width: 790px;
-}
-
 /* Base para formulários */
 .form-fields label {
   display: block;
@@ -120,21 +113,17 @@ input:focus, textarea:focus, select:focus {
 
 /* Regras de modal: aplicadas a .modal-panel e variantes */
 .modal-panel {
-  display: flex;
-  flex-direction: column;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   align-items: center;
-  justify-content: center;
   background: linear-gradient(180deg, var(--color-gradient-start-transparent), var(--color-gradient-end-transparent));
-  border: 3px solid var(--color-white);
+  border: 2px solid var(--color-white);
 
   /* Elementos são borrados atrás dos modais */
   backdrop-filter: blur(10px);
   box-shadow: 0 6px 18px var(--color-shadow);
-  padding: 1rem;
   max-height: 90vh;
   box-sizing: border-box;
   width: fit-content;
@@ -142,66 +131,29 @@ input:focus, textarea:focus, select:focus {
 
 /* parte superior dos modais */
 .modal-top {
-    display:flex;
-    justify-content:space-between;
-    margin: auto;
     align-items: center;
     width:95%;
 }
 
-/* div com nome, prazo e prioridade nos modais */
-.modal-info {
-  width: 48%;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  align-self: flex-start;
-}
-
-
-/* div de input nos modais */
-.field-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
 .field-row label {
-    text-align: right;
-    font-size:1.25rem;
-    color: var(--color-white);
+    background-color: black;
 }
 
 /* Inputs dentro do modal */
 .field-row input, .field-row select {
     background: transparent;
     border: none;
-    color: var(--color-white);
     flex: 1 1 auto;
-    font-size: 1.125rem;
     padding: 8px 10px;
     border-radius: 6px;
     box-shadow: none;
 }
 
-/* opções dentro dos selects de prioridades */
-.modal-info option{
-    background-color: var(--color-option-bg);
-    font-weight: 500;
-}
-
 /* input de descrição */
 .description {
-  margin: 0.75rem auto auto auto;
-  width: 25rem;
-  color: white;
-  font-size: 1.1rem;
-  min-height: 50vh;
-  max-height: 70vh;
   resize: none;
   overflow: auto;
   box-sizing: border-box;
-  border-radius: 10px;
 }
 
 /* Tarefas concluídas */

@@ -4,33 +4,33 @@
 
     <!-- Header -->
     <nav class="header">
-      <div class="header-div h-[7vh] w-full flex items-end">
+      <div class="header-div h-[7vh] w-full flex items-end 3xl:py-2">
 
         <!-- Área esquerda -->
-        <div class="flex items-center gap-1">
-            <img id="btnOpenAdd" data-open-modal="#addTaskModal" src="/static/images/criar_tarefa.png" class="p-2 rounded hover:bg-pink-600/20 cursor-pointer h-[45px] w-[45px]" alt="criar nova tarefa">
-            <img id="btnOpenSearch" data-open-modal="#searchModal" src="/static/images/buscar_tarefa.png" class="p-2 rounded hover:bg-pink-600/20 cursor-pointer h-[45px] w-[45px]" alt="pesquisar por título">
+        <div class="flex items-center gap-1 mb-1">
+            <img id="btnOpenAdd" data-open-modal="#addTaskModal" src="/static/images/criar_tarefa.png" class="p-1 rounded hover:bg-pink-600/20 cursor-pointer h-[35px] 2xl:h-[40px] w-[35px] 2xl:w-[40px]" alt="criar nova tarefa">
+            <img id="btnOpenSearch" data-open-modal="#searchModal" src="/static/images/buscar_tarefa.png" class="p-1 rounded hover:bg-pink-600/20 cursor-pointer h-[35px] 2xl:h-[40px] w-[35px] 2xl:w-[40px]" alt="pesquisar por título">
         </div>
 
         <!-- Logo e título centralizados -->
         <a class="title-div h-[7vh] flex items-end gap-3 mb-1 pointer-events-auto" href="{% url 'task_list:home' %}">
-            <img src="/static/images/TierTasks_icon.png" class="h-7 w-7 mb-1" alt="logo do TierTasks">
+            <img src="/static/images/TierTasks_icon.png" class="h-7 3xl:h-9 w-7 3xl:w-9 mb-1 3xl:mb-0" alt="logo do TierTasks">
             <p class="text-xl text-white">TierTasks</p>
         </a>
 
         <!-- Área direita -->
-        <div class="flex items-center gap-5">
-          <div class="flex items-center gap-1 mt-1">
+        <div class="flex items-center gap-5 3xl:mb-2">
+          <div class="flex items-center gap-1 mt-1 3xl:mt-0">
             {% if user.is_authenticated %}
-              <div class="text-xs text-white">Bem-vindo(a),</div>
-              <div class="text-sm text-[#FCFAC9]">{{ user.get_full_name|default:user.username }}</div>
+              <div class="text-xs 3xl:text-sm text-white">Bem-vindo(a),</div>
+              <div class="text-sm 3xl:text-lg 3xl:mb-0.5 text-[#FCFAC9]">{{ user.get_full_name|default:user.username }}</div>
             {% endif %}
           </div>
 
           <!-- Botão de logout -->
           <form method="post" action="{% url 'task_list:logout' %}">
             {% csrf_token %}
-            <button type="submit" class="logout px-2 py-0.5 mb-2 text-white text-sm">Logout</button>
+            <button type="submit" class="logout px-2 py-0.5 mb-2 3xl:mb-0 text-white text-sm 3xl:text-base">Logout</button>
           </form>
         </div>
       </div>
@@ -38,10 +38,10 @@
     </nav>
 
   {# Conteúdo principal entre o header e o footer, ocupando o espaço restante #}
-  <main class="main-home w-full flex flex-1 items-center justify-center gap-8">
+  <main class="main-home w-full flex flex-1 items-center justify-center gap-5 2xl:gap-8 3xl:gap-12">
 
     <!-- Prioridade Alta -->
-        <section class="priority-tier flex items-center bg-black/30 py-2 px-3 rounded-lg backdrop-blur-sm">
+        <section class="priority-tier min-w-[790px] w-[66.5vw] flex items-center bg-black/30 py-2 px-3 rounded-lg backdrop-blur-sm">
 
             <!-- ícone do tier -->
             <div class="w-20 flex justify-center">
@@ -55,31 +55,31 @@
                 <div class="carousel-track flex transition-transform duration-300 py-2" data-visible="0" data-total="{{ high_tasks|length }}">
                   {% for task in high_tasks %}
                   <div class="carousel-item flex-shrink-0 w-1/3 px-3">
-                    <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="transition-transform duration-150 hover:scale-105 bg-slate-200 px-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
+                    <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="transition-transform duration-150 hover:scale-105 bg-slate-200 px-4 rounded-lg relative h-28 2xl:h-32 3xl:h-40 {% if task.completed %}opacity-60{% endif %}">
 
                       <!-- Botões no canto superior direito -->
-                      <div class="absolute top-2 right-2 flex gap-2">
+                      <div class="absolute top-2 3xl:top-3 right-2 3xl:right-3 flex gap-1.5 2xl:gap-2 3xl:gap-3">
                         <form class="flex justify-center items-center" method="post" action="{% url 'task_list:toggle_complete' task.id %}">
                           {% csrf_token %}
                           <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150" title="Marcar/Desmarcar">
-                             <img src="/static/images/tarefa_completada.png" class="task-btn h-5 w-5" alt="marcar como completada">
+                             <img src="/static/images/tarefa_completada.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110" alt="marcar como completada">
                           </button>
                         </form>
                         <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150" type="button" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">
-                            <img alt="alterar informações" src="/static/images/configurar_tarefa.png" class="task-btn h-5 w-5">
+                            <img alt="alterar informações" src="/static/images/configurar_tarefa.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110">
                         </button>
                         <form class="flex justify-center items-center m-0 confirm-delete" method="post" action="{% url 'task_list:delete_task' task.id %}">
                           {% csrf_token %}
                           <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150"  title="Excluir">
-                              <img src="/static/images/apagar_tarefa.png" class="task-btn h-5 w-5" alt="apagar tarefa">
+                              <img src="/static/images/apagar_tarefa.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110" alt="apagar tarefa">
                           </button>
                         </form>
                       </div>
 
                       <!-- Título e prazo (opcional) da tarefa -->
                       <div class="flex flex-col justify-center h-full">
-                        <div class="text-sm font-semibold break-words">{{ task.title }}</div>
-                        <div class="text-xs text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
+                        <div class="text-sm 2xl:text-base 3xl:text-lg font-semibold break-words">{{ task.title }}</div>
+                        <div class="text-xs 2xl:text-sm 3xl:text-base text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
                       </div>
                     </div>
                   </div>
@@ -88,7 +88,7 @@
                   <!-- Criando slots vazios usando a quantidade recebida da view -->
                   {% for _ in empty_slots_high %}
                     <div class="carousel-item flex-shrink-0 w-1/3 px-3">
-                      <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 flex items-center justify-center text-slate-400">
+                      <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h- 2xl:h-28 flex items-center justify-center text-slate-400">
                           <img src="/static/images/criar_tarefa_barra.png" class="w-[35px] h-[35px]" alt="criar nova tarefa">
                       </div>
                     </div>
@@ -105,7 +105,7 @@
         </section>
 
     <!-- Prioridade média -->
-      <section class="priority-tier flex items-center bg-black/30 py-2 px-3 rounded-lg backdrop-blur-sm">
+      <section class="priority-tier flex items-center min-w-[790px] w-[66.5vw] bg-black/30 py-2 px-3 rounded-lg backdrop-blur-sm">
         <div class="w-20 flex justify-center">
           <img alt="ícone de prioridade média" src="/static/images/estrela_amarela.png" class="w-[50%] h-[50%]">
         </div>
@@ -113,27 +113,27 @@
             <div class="carousel-track flex transition-transform duration-300 py-2" data-visible="0" data-total="{{ medium_tasks|length }}">
               {% for task in medium_tasks %}
               <div class="filter carousel-item flex-shrink-0 w-1/3 px-3">
-                <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="transition-transform duration-150 hover:scale-105 bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
-                  <div class="absolute top-2 right-2 flex gap-2">
+                <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="transition-transform duration-150 hover:scale-105 bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 2xl:h-32 3xl:h-40 {% if task.completed %}opacity-60{% endif %}">
+                  <div class="absolute top-2 3xl:top-3 right-2 3xl:right-3 flex gap-1.5 2xl:gap-2 3xl:gap-3">
                     <form class="flex justify-center items-center" method="post" action="{% url 'task_list:toggle_complete' task.id %}">
                       {% csrf_token %}
                       <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150" title="Marcar/Desmarcar">
-                         <img src="/static/images/tarefa_completada.png" class="task-btn h-5 w-5" alt="marcar como completada">
+                         <img src="/static/images/tarefa_completada.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110" alt="marcar como completada">
                       </button>
                     </form>
                     <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150" type="button" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">
-                        <img alt="alterar informações" src="/static/images/configurar_tarefa.png" class="task-btn h-5 w-5">
+                        <img alt="alterar informações" src="/static/images/configurar_tarefa.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110">
                     </button>
                     <form class="flex justify-center items-center m-0 confirm-delete" method="post" action="{% url 'task_list:delete_task' task.id %}">
                       {% csrf_token %}
                       <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150"  title="Excluir">
-                          <img src="/static/images/apagar_tarefa.png" class="task-btn h-5 w-5" alt="apagar tarefa">
+                          <img src="/static/images/apagar_tarefa.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110" alt="apagar tarefa">
                       </button>
                     </form>
                   </div>
                   <div class="flex flex-col justify-center h-full">
-                    <div class="text-sm font-semibold break-words">{{ task.title }}</div>
-                    <div class="text-xs text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
+                    <div class="text-sm 2xl:text-base 3xl:text-lg font-semibold break-words">{{ task.title }}</div>
+                    <div class="text-xs 2xl:text-sm 3xl:text-base text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
                   </div>
                 </div>
               </div>
@@ -155,7 +155,7 @@
      </section>
 
     <!-- Prioridade baixa -->
-     <section class="priority-tier flex items-center bg-black/40 py-2 px-3 rounded-lg backdrop-blur-sm">
+     <section class="priority-tier flex items-center min-w-[790px] w-[66.5vw] bg-black/40 py-2 px-3 rounded-lg backdrop-blur-sm">
         <div class="w-20 flex justify-center">
           <img alt="ícone de prioridade baixa" src="/static/images/estrela_verde.png" class="w-[50%] h-[50%]">
         </div>
@@ -163,27 +163,27 @@
             <div class="carousel-track flex transition-transform duration-300 py-2" data-visible="0" data-total="{{ low_tasks|length }}">
               {% for task in low_tasks %}
               <div class="filter carousel-item flex-shrink-0 w-1/3 px-3">
-                <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="transition-transform duration-150 hover:scale-105 bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 {% if task.completed %}opacity-60{% endif %}">
-                  <div class="absolute top-2 right-2 flex gap-2">
+                <div data-open-modal="#taskModal-{{ task.id }}" role="button" title="Abrir detalhes" class="transition-transform duration-150 hover:scale-105 bg-slate-200 text-slate-900 p-4 rounded-lg relative h-28 2xl:h-32 3xl:h-40 {% if task.completed %}opacity-60{% endif %}">
+                  <div class="absolute top-2 3xl:top-3 right-2 3xl:right-3 flex gap-1.5 2xl:gap-2 3xl:gap-3">
                     <form class="flex justify-center items-center" method="post" action="{% url 'task_list:toggle_complete' task.id %}">
                       {% csrf_token %}
                       <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150" title="Marcar/Desmarcar">
-                         <img src="/static/images/tarefa_completada.png" class="task-btn h-5 w-5" alt="marcar como completada">
+                         <img src="/static/images/tarefa_completada.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110" alt="marcar como completada">
                       </button>
                     </form>
                     <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150" type="button" data-open-modal="#taskModal-{{ task.id }}" title="Abrir detalhes">
-                        <img src="/static/images/configurar_tarefa.png" class="task-btn h-5 w-5" alt="alterar informações">
+                        <img alt="alterar informações" src="/static/images/configurar_tarefa.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110">
                     </button>
                     <form class="flex justify-center items-center m-0 confirm-delete" method="post" action="{% url 'task_list:delete_task' task.id %}">
                       {% csrf_token %}
                       <button class="filter hover:saturate-200 transform hover:scale-125 transition-transform duration-150"  title="Excluir">
-                          <img src="/static/images/apagar_tarefa.png" class="task-btn h-5 w-5" alt="apagar tarefa">
+                          <img src="/static/images/apagar_tarefa.png" class="task-btn h-4 2xl:h-5 3xl:h-6 w-4 2xl:w-5 3xl:w-6 lg:scale-110" alt="apagar tarefa">
                       </button>
                     </form>
                   </div>
                   <div class="flex flex-col justify-center h-full">
-                    <div class="text-sm font-semibold break-words">{{ task.title }}</div>
-                    <div class="text-xs text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
+                    <div class="text-sm 2xl:text-base 3xl:text-lg font-semibold break-words">{{ task.title }}</div>
+                    <div class="text-xs 2xl:text-sm 3xl:text-base text-slate-500 mt-2">Prazo: {% if task.due_date %}{{ task.due_date|date:'d/m/Y' }}{% else %}—{% endif %}</div>
                   </div>
                 </div>
               </div>
@@ -211,20 +211,20 @@
   <div id="searchModal" class="fixed inset-0 z-50 hidden bg-black/25 modal-backdrop">
 
     <!-- Conteúdo do modal -->
-    <div class="search-div modal-panel rounded-2xl">
-     <form method="get" action="" class="w-full flex items-center justify-between gap-4">
+    <div class="search-div modal-panel lg:rounded-xl 2xl:rounded-2xl">
+     <form method="get" action="" class="w-full flex items-center justify-between px-4 py-3 gap-4">
         <input
           id="search-q"
           name="q"
           type="search"
           value="{{ q }}"
           placeholder="Digite o título para buscar"
-          class="w-full rounded px-3 py-3 text-slate-100 border"
+          class="w-full rounded 3xl:rounded-lg px-3 py-3 text-slate-100 border"
         />
 
         <!-- Botão de pesquisa -->
-        <label for="search-q">
-            <button type="submit" class="search-icon-btn h-14 w-14 py-[0.15rem] px-[0.25rem] right-[0.5rem]">
+        <label for="search-q" class="flex">
+            <button type="submit" class="search-icon-btn h-10 2xl:h-12 3xl:h-12 w-10 2xl:w-12 3xl:w-12">
               <img class="search-icon-btn" src="/static/images/buscar_tarefas_barra.png" alt="pesquisar">
             </button>
         </label>
@@ -234,78 +234,74 @@
 
   <!-- Modal para adicionar tarefa -->
   <div id="addTaskModal" class="fixed inset-0 z-50 hidden bg-black/25 modal-backdrop">
-    <form method="post" action="" id="add-task-form" class="modal-panel rounded-2xl">
+    <form method="post" action="" id="add-task-form" class="modal-panel flex flex-col justify-between gap-4 p-5 rounded-lg 2xl: w-[23vw]">
       {% csrf_token %}
-      <div class="modal-top">
+      <div class="modal-top flex justify-between items-center">
 
         <!-- Canto superior esquerdo do modal -->
-        <div class="modal-info">
+        <div class="modal-info flex flex-col align-center gap-1.5">
 
           <!-- div para cada 'input' com label -->
-          <div class="field-row">
 
-            <!-- input de título -->
-            <label for="add-title">Título</label>
-            <input id="add-title" name="title" required class="rounded px-3 py-2" placeholder="Título da tarefa" />
+          <!-- input de prazo -->
+          <div class="text-white text-sm 2xl:text-base 3xl:text-lg">
+            <input id="add-due_date" name="due_date" type="date" class="bg-transparent rounded" aria-label="prazo da tarefa" />
           </div>
-          <div class="field-row">
 
-            <!-- input de prazo -->
-            <label for="add-due_date">Prazo</label>
-            <input id="add-due_date" name="due_date" type="date" class="rounded px-3 py-2" />
+          <!-- input de título -->
+          <div class="text-white 2xl:text-lg 3xl:text-2xl">
+            <input id="add-title" name="title" required class="bg-transparent rounded mb-0.8" placeholder="título da tarefa" aria-label="título da tarefa" />
           </div>
-          <div class="field-row">
 
-            <!-- input de prioridade -->
+          <!-- input de prioridade -->
+          <div class="text-white text-sm 2xl:text-base 3xl:text-lg">
             <label for="add-priority">Prioridade</label>
-            <select id="add-priority" name="priority_level" class="rounded px-3 py-2">
-               <option class="select-high text-red-500" value="high">Alta</option>
-               <option class="select-medium text-yellow-400" value="medium">Média</option>
-               <option class="select-low text-green-400" value="low">Baixa</option>
+            <select id="add-priority" name="priority_level" class="rounded bg-transparent">
+               <option class="select-high text-red-500 bg-[#272B57FF]" value="high">Alta</option>
+               <option class="select-medium text-yellow-400 bg-[#272B57FF]" value="medium">Média</option>
+               <option class="select-low text-green-400 bg-[#272B57FF]" value="low">Baixa</option>
             </select>
           </div>
         </div>
 
         <!-- Botão para fechar o modal e salvar a tarefa -->
         <button type="button" class="modal-close-x" data-submit-form="#add-task-form" data-close-modal="#addTaskModal">
-           <img class="h-[5rem] w-[5rem]" src="/static/images/minimizar_modal.png" alt="criar a tarefa">
+           <img class="h-[4rem] 3xl:h-[5rem] w-[4rem] 3xl:w-[5rem]" src="/static/images/minimizar_modal.png" alt="criar a tarefa">
         </button>
       </div>
 
       <!-- Descrição abaixo dos 'inputs' -->
-      <textarea  id="add-description" name="description" class="description rounded-xl px-3 py-2" rows="8" placeholder="descrição opcional" aria-label="Descrição da tarefa"> </textarea>
+      <textarea  id="add-description" name="description" class="description text-white text-sm 2xl:text-base 3xl:text-lg min-h-[55vh] max-h-[80vh] w-full px-3 py-2 rounded" rows="8" placeholder="descrição opcional" aria-label="Descrição da tarefa"> </textarea>
     </form>
   </div>
 
   <!-- Um modal de edição por tarefa -->
   {% for task in tasks %}
   <div id="taskModal-{{ task.id }}" class="fixed inset-0 z-50 hidden bg-black/25 modal-backdrop">
-      <form method="post" action="{% url 'task_list:update_task' task.id %}" id="form-{{ task.id }}" class="modal-panel rounded-2xl">
+      <form method="post" action="{% url 'task_list:update_task' task.id %}" id="form-{{ task.id }}" class="modal-panel flex flex-col justify-between gap-4 p-5 rounded-lg 2xl: w-[23vw]">
         {% csrf_token %}
-        <div class="modal-top">
-          <div class="modal-info">
-            <div class="field-row">
-              <label for="title-{{ task.id }}">Título</label>
-              <input id="title-{{ task.id }}" name="title" value="{{ task.title }}" class="rounded px-2 py-1" />
+        <div class="modal-top flex justify-between items-center">
+          <div class="modal-info flex flex-col align-center gap-1.5">
+            <div class="text-white text-sm 2xl:text-base 3xl:text-lg">
+              <input id="due_date-{{ task.id }}" class="bg-transparent rounded" name="due_date" value="{{ task.due_date }}" type="date" aria-label="prazo"/>
             </div>
-            <div class="field-row">
-              <label for="due_date-{{ task.id }}">Prazo</label>
-              <input id="due_date-{{ task.id }}" name="due_date" value="{{ task.due_date }}" type="date" class="rounded px-2 py-1" />
+            <div class="text-white 2xl:text-lg 3xl:text-2xl">
+              <input id="title-{{ task.id }}" class="bg-transparent rounded mb-0.8" name="title" value="{{ task.title }}" aria-label="título"/>
             </div>
-            <div class="field-row">
+            <div class="text-white text-sm 2xl:text-base 3xl:text-lg">
               <label for="priority-{{ task.id }}">Prioridade</label>
-              <select id="priority-{{ task.id }}" name="priority_level" class="rounded px-2 py-1">
-                 <option class="text-red-500" value="high" {% if task.priority_level == 'high' %}selected{% endif %}>Alta</option>
-                 <option class="text-yellow-400" value="medium" {% if task.priority_level == 'medium' %}selected{% endif %}>Média</option>
-                 <option class="text-green-400" value="low" {% if task.priority_level == 'low' %}selected{% endif %}>Baixa</option>
+              <select id="priority-{{ task.id }}" class="rounded bg-transparent" name="priority_level">
+                 <option class="text-red-500 bg-[#272B57FF]" value="high" {% if task.priority_level == 'high' %}selected{% endif %}>Alta</option>
+                 <option class="text-yellow-400 bg-[#272B57FF]" value="medium" {% if task.priority_level == 'medium' %}selected{% endif %}>Média</option>
+                 <option class="text-green-400 bg-[#272B57FF]" value="low" {% if task.priority_level == 'low' %}selected{% endif %}>Baixa</option>
               </select>
             </div>
           </div>
           <button type="button" class="modal-close-x" data-submit-form="#form-{{ task.id }}" data-close-modal="#taskModal-{{ task.id }}">
-             <img class="h-[5rem] w-[5rem]" src="/static/images/minimizar_modal.png" alt="salvar alterações">
+             <img class="h-[4rem] 3xl:h-[5rem] w-[4rem] 3xl:w-[5rem]" src="/static/images/minimizar_modal.png" alt="salvar alterações">
           </button>
         </div>
-        <textarea id="description-{{ task.id }}" name="description" class="description px-3 py-2" rows="8" placeholder="descrição opcional" aria-label="Descrição da tarefa">{{ task.description }}</textarea>
+        <textarea id="description-{{ task.id }}" name="description" class="description text-white text-sm 2xl:text-base 3xl:text-lg min-h-[55vh] max-h-[80vh] w-full px-3 py-2 rounded" rows="8" placeholder="descrição opcional" aria-label="Descrição da tarefa">{{ task.description }}</textarea>
       </form>
     </div>
   {% endfor %}

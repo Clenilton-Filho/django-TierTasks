@@ -5,10 +5,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TierTasks</title>
-    
+
     <!-- CDN do tailwind  -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configuração customizada do Tailwind -->
+    <script src="{% static 'js/config-inline-tailwind.js' %}"></script>
+
+    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+    <!-- CSS global -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
     <!-- Fonte  -->
@@ -38,8 +45,8 @@
         {% block content %}{% endblock %}
 
     <!-- Footer fixo -->
-    <footer class="w-full h-[4vh] bg-black/50 py-1">
-        <p class="text-slate-300 text-center text-sm">TierTasks © 2025</p>
+    <footer class="flex align-center justify-center w-full h-[3vh] bg-black/50 py-1">
+        <p class="text-slate-300 text-center text-xs 3xl:text-sm 3xl:leading-[2.5vh]">TierTasks © 2025</p>
     </footer>
 
     <!-- Scripts js na pasta própria -->
