@@ -13,9 +13,9 @@
         </div>
 
         <!-- Logo e título centralizados -->
-        <a class="title-div h-[7vh] flex items-end gap-3 mb-1 pointer-events-auto" href="{% url 'task_list:home' %}">
-            <img src="/static/images/TierTasks_icon.png" class="h-7 3xl:h-9 w-7 3xl:w-9 mb-1 3xl:mb-0" alt="logo do TierTasks">
-            <p class="text-xl text-white">TierTasks</p>
+        <a class="title-div h-[7vh] flex items-end gap-3 mb-0.5 2xl:mb-1 pointer-events-auto" href="{% url 'task_list:home' %}">
+            <img src="/static/images/TierTasks_icon.png" class="h-5 2xl:h-7 3xl:h-9 w-5 2xl:w-7 3xl:w-9 mb-1.5 2xl:mb-1 3xl:mb-0" alt="logo do TierTasks">
+            <p class="text-lg 2xl:text-xl text-white">TierTasks</p>
         </a>
 
         <!-- Área direita -->
@@ -30,7 +30,7 @@
           <!-- Botão de logout -->
           <form method="post" action="{% url 'task_list:logout' %}">
             {% csrf_token %}
-            <button type="submit" class="logout px-2 py-0.5 mb-2 3xl:mb-0 text-white text-sm 3xl:text-base">Logout</button>
+            <button type="submit" class="logout px-2 py-0.5 mb-2 3xl:mb-0 text-white text-xs 2xl:text-sm 3xl:text-base">Logout</button>
           </form>
         </div>
       </div>

@@ -1,6 +1,6 @@
 :root{
   /* variáveis de cor */
-  --color-input-bg: rgba(0,0,0,0.25);
+  --color-input-bg: rgba(0, 0, 0, 0.25);
   --color-input-text: #ffffff;
   --color-border: #ffffff;
   --color-placeholder: rgba(169, 76, 150, 0.3);
@@ -68,44 +68,24 @@ body{
   font-size: 2.5vh;
 }
 
+/* Conteúdo da home */
 .main-home{
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-/* Base para formulários */
-.form-fields label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: var(--color-input-text);
-}
-.form-fields input,
-.form-fields textarea,
-.form-fields select {
+/* Login e registro */
+.form-fields input{
   width: 100%;
-  display: block;
-  padding: 8px 10px;
-  box-sizing: border-box;
-  background: var(--color-form-bg);
-  color: #000;
+  padding: 1vh 15px;
+  font-size: 2vh;
+  background: white;
   border: 3px solid #9A9A9A;
-  border-radius: 90px;
-  margin-bottom: 6%;
+  border-radius: 30px;
 }
 
-input, textarea, select {
-  background: var(--color-input-bg);
-  font-size: 1rem;
-  color: var(--color-input-text);
-  border-radius: 6px;
-}
-
-input::placeholder, textarea::placeholder {
-  color: var(--color-placeholder);
-}
-
+/* Substituindo o estilo de foco dos navegadores */
 input:focus, textarea:focus, select:focus {
   outline: 2px solid transparent;
   box-shadow: 0 0 0 3px var(--color-focus-ring);
@@ -147,6 +127,13 @@ input:focus, textarea:focus, select:focus {
     padding: 8px 10px;
     border-radius: 6px;
     box-shadow: none;
+}
+
+input, textarea, select {
+  background: var(--color-input-bg);
+  font-size: 1rem;
+  color: var(--color-input-text);
+  border-radius: 6px;
 }
 
 /* input de descrição */

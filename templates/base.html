@@ -23,31 +23,25 @@
   </head>
   <body class="min-h-screen min-w-screen max-h-screen max-w-screen flex  overflow-hidden">
 
-        <!-- Mensagens do django com estilos em tailwind -->
-        {% if messages %}
-          <div class="mb-3 w-full">
-            {% for message in messages %}
-
-              <!-- Se a mensagem for de erro, é vermelha. Se for um aviso, amarela. -->
-              <div class="flex items-start justify-between p-3 rounded mb-2 text-sm w-full
-                          {% if 'error' in message.tags %}bg-red-700 text-red-100
-                          {% elif 'warning' in message.tags %}bg-yellow-700 text-yellow-100
-                          {% else %}bg-slate-700 text-slate-100
-                          {% endif %}">
-                <div>{{ message }}</div>
-                <button type="button" class="ml-4 text-slate-300 close-alert">✕</button>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-
         <!-- Conteúdo específico da página em si -->
         {% block content %}{% endblock %}
 
     <!-- Footer fixo -->
     <footer class="flex align-center justify-center w-full h-[3vh] bg-black/50 py-1">
-        <p class="text-slate-300 text-center text-xs 3xl:text-sm 3xl:leading-[2.5vh]">TierTasks © 2025</p>
+        <p class="text-slate-300 text-center text-xs 3xl:text-sm leading-[2vh] 3xl:leading-[2.5vh]">TierTasks © 2025</p>
     </footer>
+
+    <!-- Mensagens do django com estilos em tailwind (posicionado ao final para garantir sobreposição) -->
+    {% if messages %}
+      <div aria-live="polite" class="pointer-events-none">
+        {% for message in messages %}
+          <div role="alert" class="fixed top-10 left-1/2 transform -translate-x-1/2 z-60 pointer-events-auto flex items-start justify-between py-3 px-4 rounded mb-2 text-sm bg-red-700 text-red-100">
+            <div class="flex-1">{{ message }}</div>
+            <button type="button" class="ml-4 text-slate-300 close-alert" aria-label="Fechar notificação">✕</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
 
     <!-- Scripts js na pasta própria -->
     <script src="{% static 'js/main.js' %}"></script>
