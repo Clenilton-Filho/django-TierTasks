@@ -18,6 +18,7 @@ class UserRegistrationForm(UserCreationForm):
         return super().save(commit=commit)
 
     def clean_password1(self):
+
          #Exige pelo menos uma letra maiúscula e um número na senha.
          password = self.cleaned_data.get('password1')
          if not password:
@@ -28,7 +29,7 @@ class UserRegistrationForm(UserCreationForm):
              raise ValidationError('A senha deve conter ao menos uma letra maiúscula.')
 
          # Verifica ao menos um dígito
-         if not re.search(r'\\d', password):
+         if not re.search(r'\d', password):
              raise ValidationError('A senha deve conter ao menos um número.')
 
          return password

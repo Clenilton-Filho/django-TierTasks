@@ -35,7 +35,15 @@
     {% if messages %}
       <div aria-live="polite" class="pointer-events-none">
         {% for message in messages %}
-          <div role="alert" class="fixed top-10 left-1/2 transform -translate-x-1/2 z-60 pointer-events-auto flex items-start justify-between py-3 px-4 rounded mb-2 text-sm bg-red-700 text-red-100">
+
+          <!-- Verifica o tipo de mensagem e altera a cor -->
+          <div role="alert" class="fixed top-10 left-1/2 transform -translate-x-1/2 z-60 pointer-events-auto flex items-start justify-between py-3 px-4 rounded-lg mb-2 text-sm
+                {% if 'error' in message.tags %}bg-red-700 text-red-100
+                {% elif 'success' in message.tags %}bg-green-700 text-green-100
+                {% elif 'warning' in message.tags %}bg-yellow-400 text-yellow-900
+                {% elif 'info' in message.tags %}bg-blue-700 text-blue-100
+                {% else %}bg-slate-700 text-white
+                {% endif %}">
             <div class="flex-1">{{ message }}</div>
             <button type="button" class="ml-4 text-slate-300 close-alert" aria-label="Fechar notificação">✕</button>
           </div>

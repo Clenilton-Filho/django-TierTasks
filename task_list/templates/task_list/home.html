@@ -88,7 +88,7 @@
                   <!-- Criando slots vazios usando a quantidade recebida da view -->
                   {% for _ in empty_slots_high %}
                     <div class="carousel-item flex-shrink-0 w-1/3 px-3">
-                      <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h- 2xl:h-28 flex items-center justify-center text-slate-400">
+                      <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 2xl:h-32 3xl:h-40 flex items-center justify-center text-slate-400">
                           <img src="/static/images/criar_tarefa_barra.png" class="w-[35px] h-[35px]" alt="criar nova tarefa">
                       </div>
                     </div>
@@ -140,7 +140,7 @@
               {% endfor %}
               {% for _ in empty_slots_medium %}
                 <div class="carousel-item flex-shrink-0 w-1/3 px-3">
-                  <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 flex items-center justify-center text-slate-400">
+                  <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 2xl:h-32 3xl:h-40 flex items-center justify-center text-slate-400">
                       <img src="/static/images/criar_tarefa_barra.png" class="w-[35px] h-[35px]" alt="criar nova tarefa">
                   </div>
                 </div>
@@ -190,7 +190,7 @@
               {% endfor %}
               {% for _ in empty_slots_low %}
                 <div class="carousel-item flex-shrink-0 w-1/3 px-3">
-                  <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 flex items-center justify-center text-slate-400">
+                  <div data-open-modal="#addTaskModal" role="button" class="bg-slate-600/40 hover:bg-pink-600/20 rounded-lg h-28 2xl:h-32 3xl:h-40 flex items-center justify-center text-slate-400">
                       <img src="/static/images/criar_tarefa_barra.png" class="w-[35px] h-[35px]" alt="criar nova tarefa">
                   </div>
                 </div>
@@ -283,7 +283,7 @@
         <div class="modal-top flex justify-between items-center">
           <div class="modal-info flex flex-col align-center gap-1.5">
             <div class="text-white text-sm 2xl:text-base 3xl:text-lg">
-              <input id="due_date-{{ task.id }}" class="bg-transparent rounded" name="due_date" value="{{ task.due_date }}" type="date" aria-label="prazo"/>
+              <input id="due_date-{{ task.id }}" class="bg-transparent rounded" name="due_date" value="{{ task.due_date|date:'Y-m-d' }}" type="date" aria-label="prazo"/>
             </div>
             <div class="text-white 2xl:text-lg 3xl:text-2xl">
               <input id="title-{{ task.id }}" class="bg-transparent rounded mb-0.8" name="title" value="{{ task.title }}" aria-label="título"/>
