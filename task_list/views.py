@@ -163,8 +163,7 @@ def register(request):
                     messages.error(request, str(pw_errs[0]))
     else:
         form = UserRegistrationForm()
-    return render(request, 'task_list/register.html', {'form': form})
-
+    return render(request, 'registration/register.html', {'form': form})
 
 # Alterar estado da tarefa (concluída, não concluída)
 @login_required
