@@ -1,6 +1,6 @@
-// Scripts para os modais com data-attributes
+// Scripts para os modais
 
-// Abrir o modal
+  // Abrir o modal
 function openModal(sel){
     var el = document.querySelector(sel);
     el.classList.remove('hidden');
@@ -17,12 +17,11 @@ function closeModal(sel){
 // Adicionando os listeners para as funções anteriores ao carregar a página
 document.addEventListener('DOMContentLoaded', function(){
 
-    // Abrir modal usando elementos com data-open-modal (Ex: ícone de informação)
+// Abrir modal usando elementos com data-open-modal (Ex: ícone de informação)
     document.querySelectorAll('[data-open-modal]').forEach(function(btn){
       if(btn.dataset.tierOpenInit) return;
       btn.dataset.tierOpenInit = '1';
       btn.addEventListener('click', function(e){
-
         // Botões/forms que possam existir dentro do elemento que abre um modal
         var interactiveEl = e.target.closest('button,form');
         if(interactiveEl){
@@ -53,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // Enviar form usando elementos com data-submit-form e fechar modal
     document.querySelectorAll('[data-submit-form]').forEach(function(btn){
-      if(btn.dataset.tierSubmitInit) return;s
+      if(btn.dataset.tierSubmitInit) return;
       btn.dataset.tierSubmitInit = '1';
       btn.addEventListener('click', function(){
         var formSel = btn.getAttribute('data-submit-form');
@@ -71,7 +70,8 @@ document.addEventListener('DOMContentLoaded', function(){
       backdrop.addEventListener('click', function(e){
         if(e.target === backdrop){
           var sel = backdrop.id ? ('#' + backdrop.id) : null;
-          closeModal(sel);
+          if(sel) closeModal(sel);
+          else backdrop.classList.add('hidden');
         }
       });
     });
