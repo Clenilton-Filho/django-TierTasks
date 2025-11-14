@@ -4,7 +4,7 @@ Pequeno projeto Django para gerenciar uma lista de tarefas com níveis de priori
 
 ## Resumo
 - Linguagem: Python
-- Framework: Django
+- Framework: Django, Tailwind
 - Banco de dados: PostgreSQL
 
 ## Funcionalidades principais
