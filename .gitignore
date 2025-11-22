@@ -1,6 +1,9 @@
 # .gitignore gerado para projeto Django/Python (Windows)
 # Ajuste conforme necessário
 
+# Histórico local de alterações 
+.history/
+
 # Arquivos de ambiente e segredos
 .env
 
